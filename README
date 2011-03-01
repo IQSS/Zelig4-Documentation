@@ -3,6 +3,7 @@ Zelig Documentation
 Includes:
   + Bibliographies
   + LaTeX Packages
+  + Instruction for Building Documentation (make_docs)
   + Developer Documentation
     - API
     - QI Simulation
