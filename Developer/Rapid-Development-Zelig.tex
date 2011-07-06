@@ -11,25 +11,48 @@
 \maketitle
 
 
-\section{Introduction}
+% Section: introduction
+% Modified:7/6/2011
+% By: Matt Owen
+% This section gives an introduction to Zelig
 
-Programming a Zelig module is a simple procedure. By following several simple steps, arbitrary statistical models can be implemented in the Zelig software suite. The following document places emphasis on speed and practicality, rather than the numerous, technical details involved in developing statistical models. That is, this guide will explain how to quickly and most simply develop Zelig packages.
+\section{Introduction}\label{section:introduction}
 
-\section{Overview}
+Programming a Zelig module is a simple procedure. By following several simple steps, any statistical model can be implemented in the Zelig software suite. The following document places emphasis on speed and practicality, rather than the numerous, technical details involved in developing statistical models. That is, this guide will explain how to quickly and most simply include existing statistical software in the Zelig suite.
 
-In order for a Zelig model to function correctly, four components need to exist
+
+% Section: overview
+% Modified:7/6/2011
+% By: Matt Owen
+% This section gives an overview of Zelig's necessary components
+
+\section{Overview}\label{section:overview}
+
+In order for a Zelig model to function correctly, four components need to exist:
 
 \begin{description}
 
-	\item[\emph{a statistical model}:] This can be any statistical model of the developer's choosing, though it is suggested that it be written in R. Examples of statistical models already implemented in Zelig include: Brian Ripley's \code{glm} and Kosuke Imai's \code{MNP} models. In most cases, this statistical model
-	\item[\code{zelig2}] This method acts as a bridge between the external statistical model and the Zelig software suite
-	\item[\code{param}] This method specifies the simulated parameters used to compute quantities of interest
-	\item[\code{qi}] This method computes - using the fitted statistical model, simulated parameters, and explanatory data - the \emph{quantities of interest}. Compared with the \code{zelig2} and \code{param} methods, 
+	\item[\emph{a statistical model}:] This can be any statistical model of the developer's choosing, though it is suggested that it be written in R. Examples of statistical models already implemented in Zelig include: Brian Ripley's \code{glm} and Kosuke Imai's \code{MNP} models.
+
+	\item[\code{zelig2}\emph{model}] This method acts as a bridge between the external statistical model and the Zelig software suite
+
+	\item[\code{param.}\emph{model}] This method specifies the simulated parameters used to compute quantities of interest
+
+	\item[\code{qi.}\emph{model}] This method computes - using the fitted statistical model, simulated parameters, and explanatory data - the \emph{quantities of interest}. Compared with the \code{zelig2} and \code{param} methods, 
+
 \end{description}
 
-\section{\code{zelig.skeleton}: Automating Zelig Model Creation}
+In the above description, replace the italicized \emph{model} text with the name of the developer's model. For example, if the model's name is ``logit'', then the corresponding methods will be titled \code{zelig2logit}, \code{param.logit}, and \code{qi.logit}.
 
-The fastest way to setup and begin programming a Zelig model is the use the \code{zelig.skeleton} method, available within the \code{Zelig} package. This method allows a fast, simple way to create \code{zelig2}, \code{describe}, \code{param}, and \code{qi} methods with the necessary boilerplate. As a result, \code{zelig.skeleton} closely mirrors the \code{package.skeleton} method included in core R.
+
+% Section: zelig.skeleton
+% Modified:7/6/2011
+% By: Matt Owen
+% This section gives details concerning zelig.skeleton
+
+\section{\code{zelig.skeleton}: Automating Zelig Model Creation}\label{zelig.skeleton}
+
+The fastest way to setup and begin programming a Zelig model is the use the \code{zelig.skeleton} function, available within the \code{Zelig} package. This function allows a fast, simple way to create the \code{zelig2}, \code{describe}, \code{param}, and \code{qi} methods with the necessary boilerplate. As a result, \code{zelig.skeleton} closely mirrors the \code{package.skeleton} method included in core R.
 
 \subsection{A Demonstrative Example}
 
@@ -38,7 +61,7 @@ library(Zelig)  # [1]
 
 zelig.skeleton(
                "my.zelig.package",                # [2]
-               models = c("gamma2", "newLogit"),  # [3]
+               models = c("gamma", "logit"),      # [3]
                author = "Your Name",              # [4]
                email = "your.email@someplace.com" # [5]
                )
@@ -49,16 +72,22 @@ zelig.skeleton(
 The above numbered comments correspond to the following:
 
 \begin{description}
+
 	\item[{[1]}] The Zelig package must be imported when using \code{zelig.skeleton}.
+
 	\item[{[2]}] The first parameter of \code{zelig.skeleton} specifies the name of the package
-	\item[{[3]}] The \code{models} parameter specifies the titles of the Zelig models to be included in the package. In the above example, "gamma2" and "newLogit" will be included in Zelig package, along with the necessary \code{zelig2}, \code{describe}, \code{param}, and \code{qi} methods.
+
+	\item[{[3]}] The \code{models} parameter specifies the titles of the Zelig models to be included in the package. In the above example, all necessary files and methods for building the ``gamma'' and ``logit'' models will be included in Zelig package.
+
 	\item[{[4]}] Specify the author's name
+
 	\item[{[5]}] Specify the email address of the software maintainer
+
 \end{description}
 
 \subsection{Conclusion}
 
-The \code{zelig.skeleton} method provides a way to automatically generate the necessary methods and file to create an arbitrary Zelig package. The method body, however, will be incomplete, save for some light documentation additions and programming boilerplate. For a detailed specification of the \code{zelig.skeleton} method, refer to Zelig help file by typing:
+The \code{zelig.skeleton} function provides a way to automatically generate the necessary methods and file to create an arbitrary Zelig package. The method body, however, will be incomplete, save for some light documentation additions and programming boilerplate. For a detailed specification of the \code{zelig.skeleton} method, refer to Zelig help file by typing:
 
 \begin{verbatim}
 library(Zelig)
@@ -72,7 +101,7 @@ library(Zelig)
 \section{\emph{zelig2}: Interacting with Existing Statistical Models in Zelig}
 \label{section:zelig2}
 
-The \code{zelig2} function acts as the bridge between the Zelig module and the existing statistical model. That is, the results of this function specify the parameters to be passed to a previously completed statistical model-fitting function. In this sense, there is nothing tricky about the \code{zelig2} function. Simply construct a list with key-value pairs in the following fashion:
+The \code{zelig2} function acts as the bridge between the Zelig module and the existing statistical model. That is, the results of this function specify the parameters to be passed to a \emph{previously completed} statistical model-fitting function. In this sense, there is nothing tricky about the \code{zelig2} function. Simply construct a list with key-value pairs in the following fashion:
 
 \begin{itemize}
 
@@ -98,9 +127,12 @@ the appropriate return-value (a list) for the \code{zelig2} function would be:
 
 % SHORT EXAMPLE
 \begin{verbatim}
+zelig2some.model <- function(formula, data) {
     list(.function = "SomeModel",
+         formula   = formula,
          weights   = 1
          )
+}
 \end{verbatim}
 
 
@@ -135,13 +167,25 @@ zelig2logit <- function (formula, weights = NULL, ..., data) {
 
 	\item[{[2]}] Specify that the parameters \code{formula}, \code{weights}, and \code{data} be given the same values as those passed into the \code{zelig2} function itself. That is, whichever values the end-user passes to \code{zelig} will be passed to the \code{glm} function
 
-	\item[{[3]}] Specify that the parameters \code{family} and \code{model} \emph{always} be given the corresponding values - \code{binomial(link="logit")} and \code{FALSE} - regardless of what the end-user passes as a parameter
+	\item[{[3]}] Specify that the parameters \code{family} and \code{model} \emph{always} be given the corresponding values - \code{binomial(link="logit")} and \code{FALSE} - regardless of what the end-user passes as a parameter.
 	
 \end{description}
+
+Note that the parameters - \code{formula}, \code{weights}, \code{data}, \code{family}, \code{model} - correspond to those of the \code{glm} function. In general, this will be the case for any \code{zelig2} method. That is, every \code{zelig2} method should return a list containing the parameters belonging to the external model, as well as, the reserved keyword \code{.function}.
+
+If you are unsure about the parameters that are passed to an existing statistical model, simply use the \code{args} or \code{formals} functions (included in R). For example, to get a list of acceptable parameters to the \code{glm} function, simply type:
+
+\begin{verbatim}
+args(glm)
+\end{verbatim}
+
 
 \subsection{An Even-More Detailed Example}
 
 {\noindent}Occasionally the statistical model and the standard style of Zelig input differ. In these instances, it may be necessary to manipulate information about the \code{formula} and \code{constraints}. This additional step in building the \code{zelig2} method is common only amongst multivariate models, as seen below in the \code{bprobit} model (bivariate probit regression for Zelig).
+
+% Complex example of a Zelig 2 Function
+%
 
 \begin{verbatim}
 zelig2bprobit <- function(formula, ..., data) {
@@ -166,21 +210,45 @@ zelig2bprobit <- function(formula, ..., data) {
 }
 \end{verbatim}
 
-\section{Explanation of the ``Even-more Detailed Example''}
+{\noindent \bf The following is an explanation of the above code:}
+
+% Describe the above code
+%
 
 \begin{description}
+
 	\item[{[1]}] Convert Zelig-style \code{formula} data-types into the style that the \code{vglm} function understands
+
 	\item[{[2]}] Extract constraint information from the \code{formula} object, as is the style commonly supported by Zelig
+
 	\item[{[3]}] Specify the \code{vglm} as the statistical model fitting function
+
 	\item[{[4]}] Specify the formula to be used by the \code{vglm} function when performing the model fitting. Note that this object is created by using both the \code{parse\.formula} and \code{cmvglm} functions 
+
 	\item[{[5]}] Specify the \code{family} of the model
+
 	\item[{[6]}] Specify the constraints to be used by the \code{vglm} function when performing the model fitting. Note that this object is created by using both the \code{parse\.formula} and \code{cmvglm} functions
+
 \end{description}
+
+% Explain how to look up information on the cmvglm and parse.formula functions
+%
+
+\noindent Note that the functions \code{parse.formula} and \code{cmvglm} are included in the core Zelig software package. Information concerning these functions can be found by typing:
+
+\begin{verbatim}
+library(Zelig)
+
+?parase.formula
+?cmvglm
+\end{verbatim}
+
+in an interactive R-session.
 
 
 \subsection{Summary and More Information}
 
-\code{zelig2} functions can be of varying difficulty - from simple parameter passing to reformatting and creating new data object to be used by the external, model-fitting function. To see more examples of this usage, please refer to the \code{survey.zelig} and \code{multinomial.zelig} packages. Regardless of the model's complexity, it ends with a simple list specifying which parameters to pass to a preexisting statistical model.
+\code{zelig2} functions can be of varying difficulty - from simple parameter passing to reformatting and creating new data objects to be used by the external model-fitting function. To see more examples of this usage, please refer to the \code{survey.zelig} and \code{multinomial.zelig} packages. Regardless of the model's complexity, it ends with a simple list specifying which parameters to pass to a preexisting statistical model.
 
 For more information on the \code{zelig2} function's full features, see
 the \emph{Advanced zelig2 Manual}, or type:
@@ -194,10 +262,12 @@ library(Zelig)
 within an interactive R-session.
 
 
-% Section: param
-\pagebreak
-\section{\emph{param}: Simulating Parameters}
-\label{section:param}
+% Section:  param
+% Modified: 6/29/2011
+% By: Matt Owen
+% This section explains how to use the param API
+
+\section{\emph{param}: Simulating Parameters}\label{section:param}
 
 
 The \code{param} function simulates and specifies parameters necessary for computing
@@ -208,25 +278,25 @@ to specify information necessary for the \code{qi} method. This includes:
 
 	\item[Ancillary parameters] These parameters specifying information about the
 		underlying probability distribution. For example, in the case of the Normal
-		Distribution, $\sigma$ and $\mu$ would be considered ancillary parameters.
+		Distribution, $\sigma$ (standard deviation) and $\mu$ (mean) would be considered ancillary parameters.
 	
 	\item[Link function] That is, the function providing the relationship between
 		the predictors and the mean of the distribution function. This is typically of
-		very little importance, but is included for completeness. For Gamma distribution, the link function is the inverse function: $ f(x) = \frac{1}{x} $
+		very little importance (compared to the inverse link function), but is frequently included for completeness. For Gamma distribution, the link function is the inverse function: $ f(x) = \frac{1}{x} $
 	
 	\item[Inverse link function] Typically crucial for simulating \emph{quantities of
 		interest} of \emph{Generalized Linear Models}. For the binomial distribution, the inverse-link function is the logit function: $ f(x) = \frac{e^x}{1+e^x} $
 	
-	\item[Simulations] Random draws taken to approximate the  maximum likelihood of \emph{quantities of interest}
+	\item[Simulated Parameters] These random draws simulate the parameters of the fitted statistical model. Typically, the \code{qi} method uses these to simulate \emph{quantities of interest} for the given model. As a result, these are of paramount importance.
 
 \end{description}
 
-The following describes how these ideas correspond to the structure of a well-written
+\noindent The following sections describe how these ideas correspond to the structure of a well-written
 \code{param} function.
 
 \subsection{The Function Signature}
 
-The \code{param} function takes very few parameters, but outputs a wealth of information important in computing \emph{quantities of interest}.
+The \code{param} function takes only two parameters, but outputs a wealth of information important in computing \emph{quantities of interest}.
 
 \begin{verbatim}
   param.logit <- function (obj, num)
@@ -235,12 +305,16 @@ The \code{param} function takes very few parameters, but outputs a wealth of inf
 \noindent The above parameters are:
 
 \begin{description}
-	\item[obj] An object of class \code{zelig}. This contains the fitted statistical model,
-		and a wealth of information concerning the underlying probability distribution
+	\item[obj] An object of class \code{zelig}
+		\footnote{
+		%
+		%
+		For a detailed specification of the \code{zelig} class, type: \code{?zelig-class} within a interactive Zelig-session.
+		}. This contains the fitted statistical model and associated information - variance-covariance matrices, the formula used to fit the model, the data to which the model was fit, etc.
 	\item[num] An integer specifying the number of simulations to be drawn. This value is specified by the end-user, and defaults to \code{1000}
 \end{description}
 
-
+% For full technical documen
 
 \subsection{The Function Return Value}
 
@@ -251,7 +325,9 @@ the list can only be given a set of specific values: \code{ancillary}, \code{coe
 
 In most cases, however, the parameters \code{ancillary}, \code{simulations}, and \code{linkinv} are sufficient. The following is an example take from Zelig's \code{gamma} model:
 
+\pagebreak
 \begin{verbatim}
+# Simulate Parameters for the gamma Model
 param.gamma <- function(obj, num) {
 
 # NOTE: gamma.shape is a method belonging to the
@@ -265,7 +341,7 @@ param.gamma <- function(obj, num) {
   # simulate ancillary parameters
   alpha <- rnorm(n=num, mean=shape$alpha, sd=shape$SE)
   
-  # simulate maximulm
+  # simulate maximum
   sims <- mvrnorm(n = num, mu = coef(obj), Sigma = vcov(obj))
 
 	# return results  
@@ -285,12 +361,14 @@ The above code does the following:
 
 \begin{enumerate}
 
-	\item Specify the ancillary parameter, typically referred to as the greek letter $\alpha$.
+	\item Specify the ancillary parameters, typically referred to as the greek letter $\alpha$.
 		In the above example, \code{alpha} is a simulation of the model's shape parameters
 	
-	\item Specify the simulations to be used in the \code{qi} function. 
+	\item Specify the parameter simulations, typically referred to as the greek letter $\beta$, to be used in the \code{qi} function. 
 	
 	\item Specify the inverse-link function
+		\footnote{The ``inverse-link'' function is also commonly referred to as the ``mean'' function. Typically, this function specifies the relationship between linear predictors and the mean of a distribution function. As a result, it is only used in describing \emph{generalized linear models} },
+		used to compute \emph{expected values} and a variety of other \emph{quantities of interest}, once samples are extracted from the model's statistical distribution.
 
 \end{enumerate}
 
@@ -301,9 +379,12 @@ The \code{param} method's basic purpose is to describe the statistical and syste
 	
 
 
+% Section:  qi
+% Modified: 6/29/2011
+% By: Matt Owen
+% This section explains how to use the qi API
 
-
-\section{qi: Simulating Quantities of Interest}
+\section{qi: Simulating Quantities of Interest}\label{section:qi}
 
 The \code{qi} function of a Zelig model simulates \emph{quantities of interest}
 using the fitted statistical model, taken from the \code{zelig2} function,
