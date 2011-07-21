@@ -29,109 +29,133 @@ statistical model's constructor function.  Specifically, a Zelig model requires:
 % !!
 %
 \begin{enumerate}
-
-	\item An existing statistical model, which is invoked through a function call and
-		returns an object
-
-	\item A {\tt zelig2} function which maps user-input from the {\tt zelig} function to
-		the existing statistical model
-		
-	\item A name for the {\tt \bf zelig} model, which can differ from the original name of
-		the statistical model.
-		
+  \item An existing statistical model, which is invoked through a function call and returns an object
+  \item A {\tt zelig2} function which maps user-input from the {\tt zelig} function to the existing statistical model
+  \item A name for the {\tt \bf zelig} model, which can differ from the original name of the statistical model.
 \end{enumerate}
 
 
-% THE ZELIG2 FUNCTION
-\section{The \emph{zelig2} Function}
-The following sections explain how to write a {\tt zelig2} function, given an arbitrary
-statistical model.  In the illustrative examples, the following conventions are used:
 
+% SIGNATURE
+\section{\code{zelig2} Method Signature}
+\label{section:zelig2-signature}
 
-
-\begin{description}
-
-	\item[model] will refer to the name of the \emph{Zelig} model, not the name of the
-		existing model - though these two names are not necessarily different.  If the developer
-		names his model ``logit'' then model refers to ``logit''.
-
-	\item[model\_function] will refer to the name of function that produces the existing
-		statistical model.  If the developer is writing a wrapper for R's built-in logit function,
-		then \emph{model\_function} refers to ``glm''.
-		
-	\item[zelig2model] will refer to the name of the {\tt zelig2} function.  If the developer
-		names his model ``logit'', then \emph{zelig2model} refers to ``zelig2logit''.
-		
-\end{description}
-
-
-% WRITING THE ZELIG2 FUNCTION
-\subsection{Writing the \emph{zelig2} Function}
-
-The {\tt zelig2} function should follow several specific conventions:
+The \code{zelig2} method's signature typically differs between Zelig models. This is essential, since statistical models generally have a wide-array of available parameters. To accommodate this, the \code{zelig2} method's signature can be any legal function declaration that adhere to the following guidelines:
 
 \begin{enumerate}
-
-	\item The {\tt zelig2model} function should be simply named \emph{zelig2model}, where
-		\emph{model} is the chosen name for the zelig package
-
-	\item The {\tt zelig2model} function itself should have arguments that list entirety of
-		possible inputs to the {\tt model\_function}
-
-	\item The {\tt zelig2model} function should return a list of key-value pairs that represent
-		the map from {\tt zelig} input to {\tt model\_function} input
-
+  \item The {\tt zelig2} method should be simply named \code{zelig2}\emph{model}, where \emph{model} is the name of the model, that will be used by zelig to reference it
+	\item The first parameter \emph{must} be titled \code{formula}
+	\item The final parameter \emph{must} be titled \code{data}
+	\item The ellipsis parameter \emph{must} exist somewhere between the \code{formula} and \code{data} parameters
+  \item Any parameter necessary for use by the external model should be included in the method's parameters
 \end{enumerate}
 
-
-% EXAMPLE USING zelig2logit
-\pagebreak
-\subsection{Example of a \emph{zelig2} Function}
+{\noindent The following is an example taken from the \code{logit} model:}
 
 \begin{verbatim}
-zelig2logit <- function(formula, ..., data, weights=NULL)
-  list(
-       .function = "glm",
-        
-       formula = formula,
-       data    = data,
-       weights = weights,
-        
-       family = binomial(link="logit"),
-       model  = FALSE
-       )
+zelig2logit <- function(formula, weights=NULL, ..., data) {
+  # ...
+}
 \end{verbatim}
 
 
+
+% RETURN VALUE
+\section{\code{zelig2} Return Value}
+\label{section:zelig2-return-value}
+
+The \code{zelig2} method's return value should be a list. The return value of the \code{zelig} method has two reserved keywords:
+
+
+\begin{enumerate}
+	\item {\bf\tt .function}: the name of the external method\footnote{``The external method'' can be any model-fitting function which returns a valid \code{formula} object, when the \code{formula} method is called with it as a parameter. That is, basically any R object can be used as a fitted model, so long as it as a valid slot that can be considered a formula.} as a character-string
+	\item {\bf \tt data}: the \code{data.frame} used by the external method to compute the statistical fit
+	\item {\bf all other keywords without a leading dot} specify a parameter to be passed to the external. This 
+\end{enumerate}
+
+{\noindent In addition to these parameters, two other other \emph{optional} reserved keywords exist:}
+
+\begin{enumerate}
+	\item {\bf\tt .hook}: a character-string specifying a function to run immediately \emph{after} the external function executes
+	\item {\bf\tt .post}: a character-string specifying a function to run immediately \emph{before} the \code{param} method executes
+\end{enumerate}
+
+{\noindent For more details on the \code{.hook} and \code{.post} reserved keywords, see Zelig's hook API specification.}
+
+
+
+% NOTABLE FEATURES
+\section{Notable Features of the \code{zelig2} Method}
+
+The \code{zelig2} method is designed to closely resemble the function call to the external model. That is, this method's parameters and return value should always closely resemble the allowable parameters of the external model's function. As a result, a good rule of thumb is to include the exact parameters from the model in the \code{zelig2} method, and only remove those that are irrelevant in the developer's Zelig implementation.
+
+
+\section{Details in Coding the \code{zelig2} Method}
+
+Typically, the \code{zelig2} method can be coded in a straightforward manner, needing little additional code aside from its return-value. This may however not be the case for models that contain an atypical style of formula. These types of \code{formula} include:
+
+\begin{itemize}
+	\item multivariate and multinomial regressions
+	\item regressions containing unique syntax, such as special tags
+	\item regressions that accept lists of formulas
+\end{itemize}
+
+%:
+One of the main goals of the Zelig software suite is to unify the language and syntax used in the man disparate statistical models. As a result, Zelig models that fall into the above categories often benefit from the existence of helper functions that convert the Zelig-style formula syntax into that used by the external model. Useful examples of this type of \code{zelig2} method can be found in both the \code{mixed.zelig} and \code{bivariate.zelig} packages.
+
+
+
+% EXAMPLE
+\section{Example of a \code{zelig2} Method}
+
+The following is an illustrative example taken from the \code{Zelig} core package and its explanation.
+
+
+\subsection{\code{zelig2logit.R}}
+
+\begin{Code}
+# [1]
+zelig2logit <- function(formula, ..., weights=NULL, data)
+  list(
+       # [2]
+       .function = "glm",
+        
+       # [3]
+       formula = formula,
+       data    = data,
+       weights = weights,
+       
+       # [4]
+       family = binomial(link="logit"),
+       model  = FALSE,
+       
+       # [5]
+       ...
+       )
+\end{Code}
+
+
 % EXPLANATION
-\subsection{Explanation of \code{zelig2} Return Values}
+\subsection{Explanation of \code{zelig2logit.R}}
+
+The following correspond to the above example:
+
+\begin{description}
+	\item[{[1]}] The method name and parameter list specify two things:
+	\begin{itemize}
+		\item the name of the \code{zelig2} method by naming the function \code{zelig2}\emph{model}, where \code{model} is the name of the model being developed
+		\item the list of acceptable parameter to pass to this Zelig model
+	\end{itemize}
+	\item[{[2]}] Specify the name of the external model
+	\item[{[3]}] Specify parameters that are user-defined. Note that the value of \code{formula}, \code{data}, and \code{weights} vary with user-input, because they are part of the \code{zelig2} method's signature
+	\item[{[4]}] Specify parameter that do not vary with user-input.
+	\item[{[5]}] Specify that any additional parameters to the \code{zelig2} method be include in the call to the external model
+\end{description}
 
 A {\tt zelig2model} function must always return a list as its return value.
 
 The entries of the returned list have the following format:
 
-\begin{description}
 
-	\item[\code{.function}] specifies, with a character string, {\tt model\_function} used to fit the data
-	
-	\item[key-value pairs] represent an explicit mapping specified by the developer for the
-		parameter that matches ``key''. Value are specified typically in one of two ways:
 
-		\begin{itemize}
-		
-			\item As a variable based on some information from the user. In the above example, this
-				corresponds to the \code{formula}, \code{data}, and \code{weights} keys in the returned
-				list. \emph{Note how all the parameters make use of variables specified in the function
-				signature}
-
-			\item As a variable that is statically set. This is useful for parameters that do not require
-				user-input. In the above example, this corresponds to the \code{family} and \code{model}
-				parameters, as their values are specified to specific values regardless of user-input.
-				\emph{Note how neither parameter make no use of the parameters in the function signature}
-						
-		\end{itemize}
-	
-	\item[an ellipsis (\dots)] specifies that all additional, optional parameters not specified in the signature of the \code{zelig2model\_function} method, will be included in the external method's call, despite not being specifically set.
-				
-	
-\end{description}
+\section{Summary and Conclusion}

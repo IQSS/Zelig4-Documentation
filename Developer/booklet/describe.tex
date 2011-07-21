@@ -1,27 +1,105 @@
+%
+%
+
 \section{Introduction}
-The {\tt describe} function serves two purposes:
+\label{section:describe-introduction}
+
+When developing a Zelig model, developers have the ability to specify citation and parameter information directly into their model's code. This allows external API's, such as those provided by the Dataverse\footnote{\url{http://thedata.org/}}, to make use of Zelig models without any additional programming on the part of the developer. In this capacity, the \code{describe} method has two purposes:
 
 \begin{enumerate}
-	\item{to give correct citation information for the Zelig model}
-	\item{to declare the type of data-sets that can be processed by the Zelig model}
+	\item{to give correct citation information for Zelig models}
+	\item{to declare the type of data that can be processed by the Zelig model}
 \end{enumerate}
 
-The developer can accomplish these two things simply by writing the {\tt describe} function for their model.
 
-\section{Form of a {\tt describe} Function}
-The {\tt describe} function should - in almost all cases - simply return a list or character-vector specifying the author, year or publication, and description of the developed model.  That is, 
+% METHOD SIGNATURE
+\section{\code{describe} Method Signature}
+\label{section:describe-signature}
 
-\section{Example of a {\tt describe} Function}
+The \code{describe} method takes a single parameter - the dots argument. This does not vary between Zelig models. As an example, the \code{logit} model's method signature is:
+
 \begin{verbatim}
-describe.logit <- function(zelig.obj)
+describe.logit <- function (...) {
+  # ...
+}
+
+\end{verbatim}
+
+
+
+% METHOD RETURN VALUE
+\section{\code{describe} Method Return Value}
+\label{section:describe-return-value}
+
+The \code{describe} method's signature is simply a list containing several required key-value pairs:
+
+\begin{itemize}
+  \item {\bf \tt author}: a vector of character-strings specifying author names
+  \item {\bf \tt text}: a character-string specifying a longer, more specific title to the Zelig model. For example, the \code{logit} models \code{text} field contains the value: "Logistic Regression for Dichotomous Dependent Variables"
+  \item {\bf \tt year}: an integer specifying the year that the Zelig model was originally developed
+\end{itemize}
+
+{\noindent}In addition to these key-value pairs, several optional parameters may be included:
+
+\begin{itemize}
+  \item {\bf \tt category}: a character-string specifying the category of statistical regression to which the given model belongs
+  \item {\bf \tt package}: a list-style object specifying information for integration with the Dataverse\footnote{The Dataverse (\url{http://thedata.org}) is a platform for extracting, sharing, and storing research data. With the correct implementation of the \code{describe} method, any Zelig model can interact directly and seamlessly with data stored on the Dataverse.}
+\end{itemize}
+
+
+
+% NOTABLE FEATURES
+\section{\code{describe} Notable Features}
+\label{section:describe-notable}
+
+The \code{describe} method notably does very little computation. That is, while it allows the developer to specify a large amount of citation information, it does not necessarily compute anything. Typically, this equates to the \code{describe} method consisting entirely of a return-value.
+
+
+
+% DEATAILS
+% \section{\code{describe} Details}
+% \label{section:describe-details}
+
+
+
+
+% EXAMPLE
+\section{Example of a {\tt describe} Function}
+
+The following sections detail the \code{describe} method of the \code{logit} Zelig model.
+
+\subsection{\code{describe.logit.R}}
+The following example is an excerpt from Zelig's \code{logit} model:
+
+\begin{verbatim}
+describe.logit <- function(...)
   list(
-       author   = c("Kosuke Imai", "Gary King"),
-       year     = 2008,
-       describe = "Logistic Regression for Dichotomous Dependent Variables"
+       # [1]
+       authors = c("Kosuke Imai", "Olivia Lau", "Gary King"),
+       # [2]
+       year    = 2008,
+       # [3]
+       text    = "Logistic Regression for Dichotomous Dependent Variables"
        )
 \end{verbatim}
 
-\section{Resulting Citation from the Above Example}
+
+\subsection{Explanation of \code{describe.logit.R}}
+
+The above code corresponds to the following ideas:
+
+\begin{description}
+  \item[{[1]}] Specify that the model had three contributors - Kosuke Imai, Olivia Lau and Gary King
+  \item[{[2]}] Specify the original year of authorship as 2008
+  \item[{[3]}] Specify the complete name of the model, that should be used for citation purposes
+\end{description}
+
+
+%
+\subsection{Results of \code{describe.logit.R}}
+
+The citation resulting from the above code example
+
 \begin{verbatim}
 How to cite this model in Zelig:
   Kosuke Imai, Gary King, and Olivia Lau. 2008.
@@ -31,5 +109,6 @@ How to cite this model in Zelig:
   http://gking.harvard.edu/zelig
 \end{verbatim}
 
-\section{Explanation of the Above Example}
-The above example is an actual copy of the {\tt describe} function for the ``logit'' model in Zelig's core package.  It specifies the author, the year of publication, and the description text in a clear and concise manner.  All Zelig models can have citation information generated for the exact same fashion that the logit model does.
+\section{Summary and Conclusion of the \code{describe} Method}
+
+The \code{describe} method provides a simple mechanism for specifying citation information. As a result, this method can be written extremely tersely.
