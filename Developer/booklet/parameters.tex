@@ -1,4 +1,5 @@
-\section{Functionality of the \emph{parameters} Class}
+\section{Introduction}
+\label{section:param-intro}
 
 Several general features - sampling distribution, link function,
 systematic component, ancillary parameters, etc. - comprise
@@ -11,8 +12,19 @@ this fact, the \emph{parameters} class provides a set of functions
 and data-structures to aid in the planning and implementation of 
 the statistical model.
 
+\section{Method Signature of \code{param}}
 
-\section{Components of a \emph{parameters} Object}
+The signature of the \code{param} method is straightforward and does not vary between differ Zelig models.
+
+\begin{Code}
+param.logit <- function (obj, num, ...) {
+  # ...
+}
+\end{Code}
+
+\section{Return Value of \code{param}}
+
+The return value of a \code{param} method is simply a list containing several entries:
 
 \begin{description}
 	\item[simulations] A vector or matrix of random draws taken from
@@ -44,24 +56,13 @@ the statistical model.
 		
 \end{description}
 
-\section{Methods of the \code{parameters} Object}
-
-\begin{description}
-
-	\item[alpha] Extracts the contents of alpha
-	
-	\item[coef] Extracts the simulated parameters specified in the key
-		\code{simulations}
-	
-	\item[link] Extracts the link function from the parameter.  This value
-		exists as long as \emph{fam} or \emph{link} are explicitly set
-	
-	\item[linkinv] Extracts the link-inverse function from the parameters.
-		This value exists as long as \emph{fam}, \emph{link} or \emph{linkinv}
-		are explicitly set.  If \emph{linkinv} is not explicitly set, then a
-		numerical approximation is used based on \emph{fam} or \emph{link}
-		
-\end{description}
+%\section{Methods of the \code{parameters} Object}
+%\begin{description}
+%	\item[alpha] Extracts the contents of alpha
+%	\item[coef] Extracts the simulated parameters specified in the key \code{simulations}
+%	\item[link] Extracts the link function from the parameter.  This value exists as long as \emph{fam} or \emph{link} are explicitly set
+%	\item[linkinv] Extracts the link-inverse function from the parameters. This value exists as long as \emph{fam}, \emph{link} or \emph{linkinv} are explicitly set.  If \emph{linkinv} is not explicitly set, then a numerical approximation is used based on \emph{fam} or \emph{link}
+%\end{description}
 
 
 \section{Writing the \emph{param} Method}
@@ -129,7 +130,7 @@ Typically, a \emph{parameters} object is used within a model's \emph{qi} functio
 
 \subsection{Example \emph{param} Function}
 
-\begin{verbatim}
+\begin{Code}
 qi.logit <- function(z, x, x1=NULL, sim.param=NULL, num=1000) {
   coef <- coef(sim.param)
   inverse <- linkinv(sim.param)
@@ -140,7 +141,7 @@ qi.logit <- function(z, x, x1=NULL, sim.param=NULL, num=1000) {
   # et cetera...
 }
 
-\end{verbatim}
+\end{Code}
 
 
 \subsection{Explanation of Above \emph{qi} Code}
