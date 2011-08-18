@@ -12,7 +12,7 @@ this fact, the \emph{parameters} class provides a set of functions
 and data-structures to aid in the planning and implementation of 
 the statistical model.
 
-\section{Method Signature of \code{param}}
+\section{\code{param} Method Signature}
 
 The signature of the \code{param} method is straightforward and does not vary between differ Zelig models.
 
@@ -22,7 +22,7 @@ param.logit <- function (obj, num, ...) {
 }
 \end{Code}
 
-\section{Return Value of \code{param}}
+\section{\code{param} Return Value}
 
 The return value of a \code{param} method is simply a list containing several entries:
 
@@ -64,23 +64,24 @@ The return value of a \code{param} method is simply a list containing several en
 %	\item[linkinv] Extracts the link-inverse function from the parameters. This value exists as long as \emph{fam}, \emph{link} or \emph{linkinv} are explicitly set.  If \emph{linkinv} is not explicitly set, then a numerical approximation is used based on \emph{fam} or \emph{link}
 %\end{description}
 
+% NOTABLE FEATURES
+\section{Notable Features of the \code{param} Method}
 
-\section{Writing the \emph{param} Method}
-
-The ``param'' function of an arbitrary Zelig model draws samples from the
-model, and describes the statistical model.  In practice, this may be done
-in a variety of fashions, depending upon the complexity of the model
+The \code{param} method is typically a brief, highly structured method. This is because simulating parameters of a statistical model is frequently straightforward, and reduced to simply computing maximum likelihood estimates based on information from the fitted, external model.
 
 
-% LIST METHODS
-% ------------
-% LOGIT EXAMPLE
-\subsection{List Method: Returning an Indexed List of Parameters}
+% DETAILS IN CODING
+\section{Details in Coding the \code{param} Method}
+
+The \code{param} method's main purpose is to compute or simulate ancillary parameters from the statistical model.  In practice, this step is typically accomplished by sampling a particular distribution or via \emph{maximum-likelihood estimation}.
 
 While the simple method of returning a vector or matrix from a \emph{param} function is extremely simple, it has no method for setting link or link-inverse functions for use within the actual simulation process.  That is, it does not provide a clear, easy-to-read method for simulating \emph{quantities of interest}.  By returning an indexed list - or a parameters object - the developer can provide clearly labeled and stored link and link-inverse functions, as well as, ancillary parameters.
 
+\section{Example of setting the \code{fam} attribute}
 
-\subsubsection{Example of Indexed List Method with \emph{fam} Object Set}
+The following are two slightly different \code{param} methods.
+
+\subsection{\code{param.logit.R}}
 
 \begin{verbatim}
 param.logit <- function(z, x, x1=NULL, num=num)
@@ -93,70 +94,51 @@ param.logit <- function(z, x, x1=NULL, num=num)
 
 % warum kommst du nicht herueber?
 
-\subsubsection{Explanation of Indexed List with \emph{fam} Object Set Example}
+\subsection{Explanation of \code{param.logit.R}}
 
 The above example shows how link and link-inverse functions (for a ``logit'' model) can be set using a ``family'' object.  Family objects exist for most statistical models - logit, probit, normal, Gaussian, et cetera - and come preset with values for link and link-inverses.  This method does not differ immensely from the simple, vector-only method; however, it allows for the use of several API functions - \emph{link}, \emph{linkinv}, \emph{coef}, \emph{alpha} - that improve the readability and simplicity of the model's implementation.
 
 The \emph{param} function and the \emph{parameters} class offer methods for automating and simplifying a large amount of repetitive and cumbersome code that may come with building the arbitrary statistical model.  While both are in principle entirely optional - so long as the \emph{qi} function is well-written - they serve as a means to quickly and elegantly implement Zelig models.
 
 
-% POISSON EXAMPLE
-\subsubsection{Example of Indexed List Method (with \emph{link} Function) Set}
+\section{Example of setting the \code{link} and \code{linkinv} attributes}
 
-\begin{verbatim}
-param.poisson <- function(z, x, x1=NULL, num=num) {
+% POISSON EXAMPLE
+\subsection{\code{param.poisson.R}}
+
+\begin{Code}
+param.normal.survey <- function(obj, num=1000, ...) {
+  # [1]
+  df <- obj$result$df.residual
+  sig2 <- summary(obj)$dispersion
+  alpha <- sqrt(df*sig2/rchisq(num, df=df))
+
+  
+  # [2]
+  simulations <- mvrnorm(num, coef(obj), vcov(obj))
+
+  
+  # [3]
+  fam <- gaussian()
+
+  
+  # [4]
   list(
-       coef = mvrnorm(n=num, mu=coef(z), Sigma=vcov(z)),
-       link = log,
-             
-       # because ``link'' is set,
-       # the next line is purely optional
-       linkinv = exp
+       simulations = simulations,
+       alpha = alpha,
+       fam   = fam
        )
 }
-\end{verbatim}
 
-\subsubsection{Explanation of Indexed List (with \emph{link} Function) Example}
+}
+\end{Code}
+
+\subsection{Explanation of \code{param.poisson.R}}
 
 The above example shows how a \emph{parameters} object can be created with by explicitly setting the statistical model's link function.  The \emph{linkinv} parameter is purely optional, since Zelig will create a numerical inverse if it is undefined.  However, the computation of the inverse is typically slower than non-iterative methods.  As a result of this, if the link-inverse is known, it should be set, using the \emph{linkinv} parameter.
 
 The above example can also contain an \emph{alpha} parameter, in order to store important ancillary parameters - mean, standard deviation, gamma-scale, etc. - that would be necessary in the computation of \emph{quantities of interest}.
 
+%\section{Future Improvements}
 
-%
-\section{Using a \emph{parameters} Object}
-
-Typically, a \emph{parameters} object is used within a model's \emph{qi} function.  While the developer can typically omit the \emph{param} function and the \emph{parameters} object, it is not recommended.  This is because making use of this function can vastly improve readability and functionality of a Zelig model.  That is, \emph{param} and \emph{parameters} automate a large amount of repetitive, cumbersome code, and offer allow access to an easy-to-use API.
-
-\subsection{Example \emph{param} Function}
-
-\begin{Code}
-qi.logit <- function(z, x, x1=NULL, sim.param=NULL, num=1000) {
-  coef <- coef(sim.param)
-  inverse <- linkinv(sim.param)
-
-  eta <- coef %*% t(x)
-  theta <- link.inverse(eta)
-
-  # et cetera...
-}
-
-\end{Code}
-
-
-\subsection{Explanation of Above \emph{qi} Code}
-
-The above is a portion of the actual code used to simulate \emph{quantities of interest} for a ``logit'' model.  By using the sim.par object, which is automatically passed into the function if a \emph{param} function is written, \emph{quantities of interest} can be computed extremely generically.  The step-by-step process of the above function is as follows:
-
-\begin{itemize}
-	\item{Assign the simulations from \emph{param.logit} to the variable ``coef''}
-	\item{Assign the link-inverse from \emph{param.logit} to the variable ``inverse''}
-	\item{Compute $\eta$ (eta) by matrix-multiplying our simulations with our explanatory results}
-	\item{Conclude ``simulating'' the \emph{quantities of interest} by applying the inverse of the link function.  The result is a vector whose median is an approximate value of the \emph{quantity of interest} and has a standard deviation that will define the confidence interval around this value}
-	
-\end{itemize}
-
-
-\section{Future Improvements}
-
-In future releases of Zelig, \emph{parameters} will have more API functions to facilitate common operations - sample drawing, matrix-multiplication, et cetera - so that the developer's focus can be exclusively on implementing important components of the model.
+% In future releases of Zelig, \emph{parameters} will have more API functions to facilitate common operations - sample drawing, matrix-multiplication, et cetera - so that the developer's focus can be exclusively on implementing important components of the model.
