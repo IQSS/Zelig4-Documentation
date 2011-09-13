@@ -1,0 +1,88 @@
+\documentclass{article}
+
+\title{Zelig-DVN Connectivity Specification}
+\author{Matt Owen}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+\label{intro}
+
+The following is a proposed revision to the Zelig-DVN (Zelig-Dataverse) 
+Communication specifications.
+
+\section{Necessary Components}
+\label{Necessary-Components}
+
+\begin{itemize}
+  \item End-user
+  \item DVN Website
+  \item DVN
+  \item Zelig Server
+  \item Mechanism for spawning R processes
+\end{itemize}
+
+\section{Basic Structure}
+\label{Basic Structure}
+
+Typical scenario:
+
+\begin{enumerate}
+  \item User requests the analysis of a data-set, specifying:
+    \begin{itemize}
+      \item outcome variables
+      \item explanatory variables
+      \item statistical model
+      \item dataset
+      \item other parameters
+    \end{itemize}
+
+  \item Dataverse forwards the user-request to a zelig server.
+
+  \item The Zelig server hears the request, and:
+    \begin{enumerate}
+      \item Requests the data-set from the DVN
+      \item Reads the columns, and classifies the type of data submitted. That
+        is, whether each column contains numeric, integer, or factor data. If 
+        integer or factor data is submitted, the number of unique results is
+        recorded, to determine whether the data requires a multinomial model.
+      \item The Zelig server checks whether the user request can be fulfilled.
+        This involves:
+        \begin{itemize}
+          \item Determining whether the formula submitted by the user matches 
+            the expected input format of the statistical model
+          \item Determining whether the data-set's columns contain values that
+            matches the expected data-types of the statistical model
+        \end{itemize}
+      \item Returns responds to the DVN's request, specifying whether the model
+        with the given parameters can be computed.
+    \end{enumerate}
+    
+  \item The DVN requests the analysis to be performed
+
+  \item The Zelig server hears the request, and:
+    \begin{enumerate}
+      \item Loads the necessary Zelig package
+      \item Constructs the appropriate formula
+      \item Loads the appropriate data from DVN
+      \item Performs the analysis (using Zelig, setx and sim)
+      \item Returns the analysis as a PNG file. This should include:
+        \begin{itemize}
+          \item The plot of the fitted model
+          \item The plot of the simulated results
+        \end{itemize}
+      \item Additionally, plain-text results can be submitted for use with
+        AJAX, if this is desired.
+    \end{enumerate}
+\end{enumerate}
+
+
+\section{Zelig Server}
+\label{Zelig-Server}
+
+
+
+
+\end{document}
