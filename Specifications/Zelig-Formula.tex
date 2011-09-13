@@ -9,11 +9,34 @@
 
 \section{Introduction}
 
-One of the primary goals of Zelig is to unify the language used for the computation of statistical models.
+The range of allowable formula in Zelig is often over-articulate. This allows
+end-users and developers a wide-range of syntactically legal formula options.
 
-\section{}
+The following document defines the specification for models to be submitted to
+Zelig.
+
+
+\section{Basic Formula}
+
+The basic structure of a Zelig formula conforms to the following specifications:
+
+\begin{enumerate}
+  \item The left-hand side must be written in one of two formats:
+    \begin{itemize}
+      \item It must evaluate to a singular vector, or
+      \item It must evaluate to a matrix with one column per outcome variable.
+    \end{itemize}
+  \item The left-hand side of the formula specifies the outcome (dependent) variables.
+  \item The formula must be flat. That is, nested formula are considered
+    illegal. For example, the formula {\tt y ~ a ~ b} is considered illegal.
+  \item The left-hand side only supports "+", "*". ":", and "cbind",
+  \item "cbind" can only be used as the first operation on the left-hand side of an equation.
+  \item The right-hand side of the formula specifies the explanatory (independent) variables.
+  \item The formula may be a list if it is describing multiple outcome variables.
+\end{enumerate}
+
+
 
 
 
 \end{document}
-
