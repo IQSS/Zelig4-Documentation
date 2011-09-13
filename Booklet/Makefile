@@ -30,6 +30,7 @@ update:
 	git pull origin master
 
 commit:
+	git pull origin master
 	git add .
 	git commit -m "Updating latex documentation automatically"
 	git push -u origin master
