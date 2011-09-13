@@ -26,8 +26,10 @@ clean:
 	rm -f $(OUT)
 	rm -f $(TOC)
 
+update:
+	git pull origin master
+
 commit:
-	git pull
 	git add .
 	git commit -m "Updating latex documentation automatically"
-	git push -u master origin
+	git push -u origin master
