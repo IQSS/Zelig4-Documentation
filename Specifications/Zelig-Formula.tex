@@ -16,6 +16,26 @@ The following document defines the specification for models to be submitted to
 Zelig.
 
 
+\section{Conceptual Requirements}
+\label{Conceptual-Requirements}
+
+\begin{enumerate}
+  \item Formal language for describing statistical models. The language used to
+    articulate the models should be written generally enough to articulate 
+    arbitrary statistical models. In particular, Zelig needs specifications to
+    provide details for implementing models containing variable types:
+    \begin{itemize}
+      \item Continuous,
+      \item Ordered and
+      \item Multinomial
+    \end{itemize}
+
+    As well as providing facilities for articulating multivariate regressions.
+
+  \item 
+\end{enumerate}
+
+
 \section{Basic Formula}
 
 The basic structure of a Zelig formula conforms to the following specifications:
@@ -34,8 +54,6 @@ The basic structure of a Zelig formula conforms to the following specifications:
   \item The right-hand side of the formula specifies the explanatory (independent) variables.
   \item The formula may be a list if it is describing multiple outcome variables.
 \end{enumerate}
-
-
 
 
 
