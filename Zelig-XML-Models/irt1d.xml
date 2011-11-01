@@ -1,0 +1,14 @@
+<model name="irt1d" label="Models for Dichotomous Dependent Variables" specialFunction="cbind">
+<description>One Dimensional Item Response Model</description>
+<helpLink url="http://gking.harvard.edu/zelig/doc/irt1d.pdf"/>
+<packageDependency name= "MCMCpack" version= "0.6"/>
+<formula minEquations="1" maxEquations="1" simulEq="0">
+<equation name="pi">
+<outcome minVar="1" >
+<modelingType>binary</modelingType>
+</outcome>
+</equation>
+</formula>
+<setx maxSetx="0"/>
+ </model>
+

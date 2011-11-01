@@ -1,0 +1,24 @@
+<model name="weibull" label="Models for Continous Bounded Dependent Variables" specialFunction="Surv">
+<description>Weibull Regression for Duration Dependent Variables</description>
+<helpLink url="http://gking.harvard.edu/zelig/doc/weibull.pdf"/>
+<packageDependency name= "survival" version= "2.2"/>
+<formula minEquations="1" maxEquations="1" simulEq="0">
+<equation name="lambda">
+ <outcome minVar="1" maxVar="1" label="Duration">
+<modelingType>continuous</modelingType>
+</outcome>
+<outcome maxVar="1" minVar="0" label="Censored">
+<modelingType>binary</modelingType>
+</outcome>
+ <explanatory  minVar="1" >
+<modelingType>continuous</modelingType>
+<modelingType>discrete</modelingType>
+<modelingType>nominal</modelingType>
+<modelingType>ordinal</modelingType>
+<modelingType>binary</modelingType>
+</explanatory>
+</equation>
+</formula>
+<setx maxSetx="2"/>
+ </model>
+

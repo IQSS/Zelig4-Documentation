@@ -1,0 +1,21 @@
+<model name="logit.bayes" label="Models for Dichotomous Dependent Variables">
+<description>Bayesian Logistic Regression for Dichotomous Dependent Variables</description>
+<helpLink url="http://gking.harvard.edu/zelig/doc/logit.bayes.pdf"/>
+<packageDependency name= "MCMCpack" version= "0.6"/>
+<formula minEquations="1" maxEquations="1" simulEq="0">
+<equation name="pi">
+<outcome >
+<modelingType>binary</modelingType>
+</outcome>
+ <explanatory  minVar="1" >
+<modelingType>continuous</modelingType>
+<modelingType>discrete</modelingType>
+<modelingType>nominal</modelingType>
+<modelingType>ordinal</modelingType>
+<modelingType>binary</modelingType>
+</explanatory>
+</equation>
+</formula>
+<setx maxSetx="2"/>
+ </model>
+

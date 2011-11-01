@@ -1,0 +1,18 @@
+<model name="factor.mix" label="Models for Mixed Dependent Variables" specialFunction="cbind">
+<description>Mixed Data Factor Analysis</description>
+<helpLink url="http://gking.harvard.edu/zelig/doc/factor.mix.pdf"/>
+<packageDependency name= "MCMCpack" version= "0.6"/>
+<formula minEquations="1" maxEquations="1" simulEq="0">
+<equation name="mu">
+<outcome minVar="2" >
+<modelingType>continuous</modelingType>
+<modelingType>discrete</modelingType>
+<modelingType>nominal</modelingType>
+<modelingType>ordinal</modelingType>
+<modelingType>binary</modelingType>
+</outcome>
+</equation>
+</formula>
+<setx maxSetx="0"/>
+ </model>
+

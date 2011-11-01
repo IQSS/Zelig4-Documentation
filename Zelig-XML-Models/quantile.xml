@@ -1,0 +1,21 @@
+<model name="quantile" label="Models for Continuous Dependent Variables">
+<description>Quantile Regression for Continuous Dependent Variables</description>
+<helpLink url="http://gking.harvard.edu/zelig/doc/quantile.pdf"/>
+<packageDependency name= "quantreg" version= "4.26"/>
+<formula minEquations="1" maxEquations="1" simulEq="0">
+<equation name="xi">
+<outcome >
+<modelingType>continuous</modelingType>
+</outcome>
+ <explanatory  minVar="1" >
+<modelingType>continuous</modelingType>
+<modelingType>discrete</modelingType>
+<modelingType>nominal</modelingType>
+<modelingType>ordinal</modelingType>
+<modelingType>binary</modelingType>
+</explanatory>
+</equation>
+</formula>
+<setx maxSetx="2"/>
+ </model>
+

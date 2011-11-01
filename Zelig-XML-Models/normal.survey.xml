@@ -1,0 +1,21 @@
+<model name="normal.survey" label="Models for Continuous Dependent Variables">
+<description>Survey-Weighted Normal Regression for Continuous Dependent Variables</description>
+<helpLink url="http://gking.harvard.edu/zelig/doc/normal.survey.pdf"/>
+<packageDependency name= "survey" version= "3.6-13"/>
+<formula minEquations="1" maxEquations="1" simulEq="0">
+<equation name="mu">
+<outcome >
+<modelingType>continuous</modelingType>
+</outcome>
+ <explanatory  minVar="1" >
+<modelingType>continuous</modelingType>
+<modelingType>discrete</modelingType>
+<modelingType>nominal</modelingType>
+<modelingType>ordinal</modelingType>
+<modelingType>binary</modelingType>
+</explanatory>
+</equation>
+</formula>
+<setx maxSetx="2"/>
+ </model>
+

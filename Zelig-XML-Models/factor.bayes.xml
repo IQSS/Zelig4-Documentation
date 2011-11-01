@@ -1,0 +1,14 @@
+<model name="factor.bayes" label="Models for Continuous Dependent Variables" specialFunction="cbind">
+<description>Bayesian Factor Analysis</description>
+<helpLink url="http://gking.harvard.edu/zelig/doc/factor.bayes.pdf"/>
+<packageDependency name= "MCMCpack" version= "0.6"/>
+<formula minEquations="1" maxEquations="1" simulEq="0">
+<equation name="mu">
+<outcome minVar="3" >
+<modelingType>continuous</modelingType>
+</outcome>
+</equation>
+</formula>
+<setx maxSetx="0"/>
+ </model>
+

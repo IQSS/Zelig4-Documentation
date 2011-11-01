@@ -1,0 +1,21 @@
+<model name="tobit.bayes" label="Models for Continuous Dependent Variables">
+<description>Bayesian Linear Regression for a Censored Dependent Variable</description>
+<helpLink url="http://gking.harvard.edu/zelig/doc/tobit.bayes.pdf"/>
+<packageDependency name= "MCMCpack" version= "0.6"/>
+<formula minEquations="1" maxEquations="1" simulEq="0">
+<equation name="mu">
+<outcome >
+<modelingType>continuous</modelingType>
+</outcome>
+ <explanatory  minVar="1" >
+<modelingType>continuous</modelingType>
+<modelingType>discrete</modelingType>
+<modelingType>nominal</modelingType>
+<modelingType>ordinal</modelingType>
+<modelingType>binary</modelingType>
+</explanatory>
+</equation>
+</formula>
+<setx maxSetx="2"/>
+ </model>
+
