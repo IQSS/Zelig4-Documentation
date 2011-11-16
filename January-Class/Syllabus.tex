@@ -4,6 +4,8 @@
 \title{Programming Statistical Models with Zelig 4}
 \author{Matt Owen}
 
+\usepackage{hyperref}
+
 
 \begin{document}
 
@@ -12,82 +14,192 @@
 
 
 % Introduction
-%
 \section{Introduction}
 \label{intro}
 
-In this course, students will develop statistical models in the R programming 
-language, using the Zelig 4 software package. Emphasis is placed on using 
+In this course, students will develop statistical packages in the R programming 
+language using the Zelig 4 software suite and API. Emphasis is placed on using 
 generalized modeling techniques - linear regressions, simulations - to create 
 predictive models that work with a large array of data-sets. Students will also 
 learn the basic of developing R packages for distribution via CRAN 
 (The Comprehensive R Network), a platform for sharing open-source statistical 
 software on the internet.
 
+Registration can be found on the \href{http://www.iq.harvard.edu/events/node/2710}{event site}
+(\url{http://www.iq.harvard.edu/events/node/2710}).
+
+
 
 % Prequisites
-%
 \section{Prerequisites}
 \label{prereq}
 
-\begin{enumerate}
-  \item Basic Programming: conditional statements, loops and writing functions
-  \item Basic R Programming: Sampling distributions and Linear Regressions
-  \item Statistics: Descriptive statistics, linear regressions and bootstrapping
-  \item Math: Matrix algebra
-\end{enumerate}
+Due to the brevity of the course, several requirements are imposed on registered
+students:
+
+\begin{itemize}
+  \item {\bf Basic Programming}: conditional statements, loops and functions
+  \item {\bf R Programming}: Sampling distributions and Linear Regressions
+  \item {\bf Statistics}: Descriptive statistics, linear regressions and bootstrapping
+  \item {\bf Math}: Matrix algebra
+\end{itemize}
+
+
+
+% Goals
+\section{Goals}
+\label{goals}
+
+Upon completion of this course, students should have an understanding of the processes
+involved in:
+
+\begin{itemize}
+	\item Developing statistical packages in R
+	\item Programming Statistical and Mathematical ideas using Zelig
+	\item Submitting packages to CRAN
+\end{itemize}
+
+
+
+% Goals
+\section{Project}
+\label{project}
+
+Throughout this course, students will be developing one of several well known statistical models
+\footnote{Students will divide themselves into groups and work together to develop a full-featured
+statistical package based on one of several well-known model fitting functions.}.
+That is, students will develop a statistical package based on a well-known statistical technique, 
+so that their work can be compared to well-known results in inferential statistics. Additionally,
+this offers students a hands-on experience with the procedures and development cycle associated
+with converting Statistical concepts to actual computer software.
+
+
 
 
 % Schedule
-%
 \section{Schedule}
 \label{schedule}
 
-\begin{tabular}{ | p{.3\textwidth} | p{.7\textwidth} |}
+This course will be divided between 4 days, each with a lecture and workshop component.
+Lectures will focus on introducing new concept and programming techniques. Workshops will
+focus on the pragmatically implementing the concepts and techniques introduced during the
+lecture. During the workshop, emphasis will be placed on the problem-solving required to 
+translate a Mathematical idea into a full-featured R program.
 
-  \hline
 
-  % Row 1
-  January 17\textsuperscript{th} & 
-  \begin{itemize}
-    \item Basics of writing R packages
-    \item Overview of programming statistical simulation
-    \item Constructing a statistical package
-    \item Interfacing Zelig with external statistical packages
-    \item Citation
-  \end{itemize}
-  \\ \hline
 
-  % Row 2
-  January 18\textsuperscript{th} & 
-  \begin{itemize}
-    \item Specifying counterfactuals 
-    \item Working with the {\tt setx} object
-    \item Simulating parameters of an external model
-    \item Programming statistical bootstrapping
-  \end{itemize}
-  \\ \hline
+% January 17th
+\subsection{January 17\textsuperscript{th} \\ Creating R packages and Fitting Statistical Models}
+  
+This session focuses on the creation of R packages, presents a brief overview of statistical simulation
+as it relates to creating R packages, and explains the use of model-fitting functions in this role.
+  
+\begin{itemize}
 
-  % Row 3
-  January 19\textsuperscript{th} & 
-  \begin{itemize}
-    \item Understanding statistical simulation
-    \item Simulating quantities of interest
-    \item Making predictions
-    \item Generating counterfactuals
-  \end{itemize}
-  \\ \hline
+	% lecture
+	\item {\bf Lecture}
+		\begin{itemize}
+		  \item Overview of programming statistical simulation
+			\item The {\tt zelig} function
+		  \item Interfacing Zelig with external statistical packages
+		  \item Model Description and Citing Your Model
+		\end{itemize}
+		
+	% workshop
+	\item {\bf Workshop}
+		\begin{itemize}
+			\item Structuring a statistical package
+			\item Choosing a statistical model to create
+			\item Writing {\tt zelig2} function
+		\end{itemize}
 
-  % Row 4
-  January 20\textsuperscript{th} & 
-  \begin{itemize}
-    \item Putting it all together
-    \item Problem-solving workshop
-    \item Submitting packages to CRAN!
-  \end{itemize}
-  \\ \hline
+\end{itemize}
 
-\end{tabular}
 
+
+% January 18th
+\subsection{January 18\textsuperscript{th} \\ Working with Data and Counterfactuals}
+
+This section focuses on the role of data and parameter simulation in the overall
+process of statistical simulation.
+
+\begin{itemize}
+
+	% lecture
+	\item {\bf Lecture}
+		\begin{itemize}
+		  \item The {\tt setx} function
+		  \item Simulating parameters of an external model
+		  \item Programming statistical bootstrapping
+		\end{itemize}
+
+	% workshop
+	\item {\bf Workshop}
+		\begin{itemize}
+			\item Specifying Explanatory Variables
+	    \item Writing with the {\tt param} method
+		  \item Programming Counterfactuals
+		\end{itemize}
+
+\end{itemize}
+
+
+
+% January 19th
+\subsection{January 19\textsuperscript{th} \\ Simulating Quantities of Interest}
+
+This session focuses on the role of the actual simulation of \emph{quantities of interest}.
+That is, through the combined work of {\bf fitting statistical models} and {\bf parameter
+simulation}, we are able to produce values with significant and particular meaning.
+Emphasis will be placed on developing both the qualitative and quantitative aspects of the
+process as well as the general applicability of the procedure.
+
+\begin{itemize}
+
+	% lecture
+	\item {\bf Lecture}
+		\begin{itemize}
+		  \item Understanding statistical simulation
+			\item The {\tt sim} function
+			\item Simulating quantities of interest
+		\end{itemize}
+	
+	% workshop
+	\item {\bf Workshop}
+		\begin{itemize}
+			\item Writing the {\tt qi} method
+		  \item Making predictions
+		\end{itemize}
+
+\end{itemize}
+
+
+
+% January 20th
+\subsection{January 20\textsuperscript{th} \\ Overview and Problem-Solving Workshop}
+
+This session is devoted to the final aspects of R package creation: solving problems, 
+beautifying-output and submitting packages to CRAN. As a result, students will spend most of this
+day completing their statistical package and working out solutions to the inevitable pitfalls
+that accompany developing statistical packages.
+
+\begin{itemize}
+
+	% lecture
+	\item {\bf Lecture}
+		\begin{itemize}
+		  \item How to submit packages to CRAN
+		  \item Review of the complete process of developing statistical packages
+		  \item What's next?
+		\end{itemize}
+		
+	% workshop
+	\item {\bf Workshop}
+		\begin{itemize}
+		  \item Problem-solving workshop
+		  \item Putting it all together
+		\end{itemize}
+	
+\end{itemize}
 
 \end{document}
