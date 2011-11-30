@@ -1,14 +1,10 @@
 Zelig Documentation
 ===================
-Includes:
-  + Bibliographies
-  + LaTeX Packages
-  + Instruction for Building Documentation (make_docs)
-  + Developer Documentation
-    - API
-    - QI Simulation
-    - Numerical Libraries
-  + End User Documentation
-    - Reference Manual
-    - 
-  + FAQ's
+
+Booklet: The Zelig Developers' Manual
+DVN: Specification for Zelig-DVN API
+January-Class: Slides for January's Zelig course
+R-and-Statistics: Slides, examples and solutions to exercises
+Slides: Unspecified slides
+Specifications: Specifications for Zelig-style formulas
+Zelig-XML-Models: XML for Zelig-DVN integration (Zelig 3.5)
