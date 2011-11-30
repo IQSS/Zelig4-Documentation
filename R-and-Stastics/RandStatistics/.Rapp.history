@@ -1,0 +1,3 @@
+load("/Users/matt/Desktop/RandStatistics/Exam.Rdata")
+data(Exam)
+Exam

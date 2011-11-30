@@ -1,0 +1,277 @@
+#r & Statistics
+#Alicia Doyle Lynch
+#HMDC Feb 2011
+
+#Zelig
+#To download, type
+install.packages("MNP")
+install.packages("Zelig")
+library(Zelig)
+#Add Zelig to default packages (i.e., don't have to call up Zelig at each session
+options(defaultPackages = c(getOption("defaultPackages"), "Zelig"))
+
+#load today's dataset
+load("S:\\DataClass\\RandStatistics\\NatHealth2008.Rdata")
+attach(NatHealth2008)
+
+#Multiple regression
+names(NatHealth2008)
+weight.out <- zelig(bmi~cigsday+modmin+sleep, model="ls", data=NatHealth2008)
+summary(weight.out)
+
+#Logistic Regression
+summary(hypev)
+table(hypev)
+hyp.out <- zelig (hypev~AGE_P+sex+sleep+bmi, model="logit", data=NatHealth2008)
+summary(hyp.out)
+summary(AGE_P)
+x.low <- setx(hyp.out, AGE_P=33)
+x.high <- setx(hyp.out, AGE_P=66)
+s.out <- sim(hyp.out, x=x.low, x1=x.high)
+summary(s.out)
+plot(s.out)
+
+
+#####################
+#MULTIPLE IMPUTATION#
+#####################
+
+#Amelia
+install.packages("Amelia",repos="http://r.iq.harvard.edu")
+library(Amelia)
+#Load data
+load("S:\\DataClass\\RandStatistics\\NatHealth2008MI.Rdata")
+attach(NatHealth2008MI)
+#Look at just select variables
+summary(NatHealth2008MI[,c("wkdayr", "beddayr", "sex", "AGE_P")])
+#Look at all variables
+summary(NatHealth2008MI)
+#create 5 imputed datasets
+random <- sample(1:1000, 1)
+random
+set.seed(602)
+NatHealth.MI <- amelia(NatHealth2008MI, m=5, idvars=c("id"))
+#id vars says keep these vars out of imputation but leave in dataset
+#ords specifies ordinal variables (categorical var with clear order)
+#noms specifies nominal variables (e.g. region, race/ethnicity, etc.)
+#For example: NatHealth.MI <- amelia(NatHealth2008MI, m=5, noms="marital", idvars=c("id"))#
+#ts = time series, cs = cross sectional
+
+#Histogram of outcome wkdayr from 3rd imputed dataset
+hist(NatHealth.MI$imputations[[3]]$wkdayr, col = "grey", border = "white")
+
+plot(NatHealth.MI, which.vars = 9:12)
+#compare observed to imputed values
+#if no missing data, observed values simply plotted in blue
+overimpute(NatHealth.MI, var="cigsday")
+#imputes values of OBSERVED variables to look at whether imputation
+is doing a good job.  Amelia plots 90% confidence intervals so you can see
+when imputed values cover the y=x line - dots represent the mean imputation
+#color of line indicates the fraction of missing observations in the pattern
+of missingness for that observation
+#Save imputed datsets
+save(NatHealth.MI, file="S:\\DataClass\\RandStatistics\\NatHealthImputed.Rdata")
+#save files serparately
+write.amelia(obj=NatHealth.MI, file.stem="S:\\DataClass\\RandStatistics\\NatHealthImputed")
+
+AmeliaView()
+#do the same thing but with a GUI instead of command lines
+
+#Now call up datasets for use in analysis
+#Datasets are saved as .csv files - go into stat transfer to move them into .Rdata files
+load("S:\\DataClass\\RandStatistics\\NatHealthImputed1.Rdata")
+load("S:\\DataClass\\RandStatistics\\NatHealthImputed2.Rdata")
+load("S:\\DataClass\\RandStatistics\\NatHealthImputed3.Rdata")
+load("S:\\DataClass\\RandStatistics\\NatHealthImputed4.Rdata")
+load("S:\\DataClass\\RandStatistics\\NatHealthImputed5.Rdata")
+
+#Or, skip stat transfer and load directly
+NatHealthImputed1 <- read.csv("S:\\DataClass\\RandStatistics\\NatHealthImputed1.csv", header=T)
+NatHealthImputed2 <- read.csv("S:\\DataClass\\RandStatistics\\NatHealthImputed2.csv", header=T)
+NatHealthImputed3 <- read.csv("S:\\DataClass\\RandStatistics\\NatHealthImputed3.csv", header=T)
+NatHealthImputed4 <- read.csv("S:\\DataClass\\RandStatistics\\NatHealthImputed4.csv", header=T)
+NatHealthImputed5 <- read.csv("S:\\DataClass\\RandStatistics\\NatHealthImputed5.csv", header=T)
+
+miWKDAYR <- zelig(wkdayr~cigsday+modmin+sleep, model="ls", 
+data = mi(NatHealthImputed1, NatHealthImputed2, 
+NatHealthImputed3, NatHealthImputed4, NatHealthImputed5))
+summary(miWKDAYR)
+
+####################
+#Multi-level models#
+####################
+
+library(nlme)
+library(multilevel)
+
+load("S:\\DataClass\\RandStatistics\\Exam.Rdata")
+names(Exam) 
+
+#Null Model
+Norm1 <- lme(fixed=normexam~1, random=~1|school, data=Exam, method="ML")
+summary(Norm1)
+
+#Calculate ICC & Group mean reliability
+VarCorr(Norm1)
+ICCNorm1 <- (.1686/(.1686+.8478))
+grprel <- GmeanRel(Norm1)
+grprel
+grprel$ICC
+
+#Random intercept, fixed predictor @ individual level
+Norm2 <- lme(fixed=normexam~standLRT, random=~1|school, data=Exam, method="ML")
+summary(Norm2)
+
+#Random intercept, fixed predictor @ individual level, random slope
+Norm3 <- lme(fixed=normexam~standLRT, random=~standLRT|school, data=Exam, method="ML")
+summary(Norm3)
+
+#Calculate significance of random slope
+#test -log likelihood ratios between model with and without random slope
+#term to determine if random effect is significant
+Norm3a<-update(Norm3, random=~1|school)
+anova(Norm3, Norm3a)
+
+#Random intercept, random slope, individual and group level predictor
+Norm4 <- lme(fixed=normexam~standLRT+schavg, random=~standLRT|school, data=Exam, method="ML")
+summary(Norm4)
+
+#Random intercept, cross-level interaction
+Norm5 <- lme(fixed=normexam~standLRT+sex*schavg, random=~standLRT|school, data=Exam, method="ML")
+summary(Norm5)
+
+###########
+#Exercises#
+###########
+
+##Exercise 1 - Logistic Regression##
+data(turnout)
+attach(turnout)
+#1. 
+summary(educate)
+#2.
+z.out <- zelig (vote~race+age+educate, model="logit", data=turnout)
+summary(z.out)
+#3.
+x.low <- setx(z.out, educate=12)
+x.high <- setx(z.out, educate=16)
+s.out <- sim(z.out, x=x.low, x1=x.high)
+summary(s.out)
+plot(s.out)
+
+##Exercise 2 - Creating multiply imputed datasets##
+load("S:\\DataClass\\RandStatistics\\gssIMPUTE2.Rdata")
+names(gssIMPUTE2)
+#1.
+random <- sample(1:1000, 1)
+random
+set.seed(195)
+gss.impute <- amelia(gssIMPUTE2, m=5, noms=c("marital", "happy"), idvars="id")
+#2.
+plot(gss.impute, which.vars = 1:6)
+#3.
+overimpute(gss.impute, var="inc")
+#4.
+write.amelia(obj=gss.impute, file.stem="S:\\DataClass\\RandStatistics\\gssIMP")
+
+##Exercise 3 - Multilevel Modeling##
+data(bh1996)
+attach(bh1996)
+#1.
+Wbeing1 <- lme(fixed=WBEING~1, random=~1|GRP, data=bh1996, method="ML")
+summary(Wbeing1)
+#2.
+VarCorr(Wbeing1)
+icc <- .0353/(.0353+.7895)
+icc
+#or#
+grprel <- GmeanRel(Wbeing1)
+grprel$ICC
+#3.
+Wbeing2 <- lme(fixed=WBEING~HRS + LEAD, random=~1|GRP, data=bh1996, method="ML")
+summary(Wbeing2)
+#4. 
+Wbeing3 <- lme(fixed=WBEING~HRS + LEAD, random=~HRS|GRP, data=bh1996, method="ML")
+summary(Wbeing3)
+Wbeing3a <-update(Wbeing3, random=~1|GRP)
+anova(Wbeing3, Wbeing3a)
+#5.
+Wbeing4 <- lme(fixed=WBEING~HRS + LEAD + G.COHES, random=~HRS|GRP, data=bh1996, method="ML")
+summary(Wbeing4)
+
+################
+#Bonus material#
+################
+
+##Additional MLM commands##
+##Use exam data from earlier example (comes with multilevel library)##
+
+#Calculate average group size
+grpsize <- grprel$GrpSize
+mean(grpsize)
+
+#Generate table of random effects
+ranef(Norm3)
+
+#Centering within lme command 
+#groupmean center level 1 variable
+summary(Exam[,c("standLRT", "schavg")])
+Norm3c <- lme(fixed=normexam~I(standLRT-.00181), random=~standLRT|school, data=Exam, method="ML")
+summary(Norm3c) 
+#grandmean center level 2 variable
+mean(schavg)
+Norm4c <- lme(fixed=normexam~I(standLRT-.00181)+I(schavg-.00181), random=~standLRT|school, data=Exam, method="ML")
+summary(Norm4c)
+
+#Creating group-level statistics in R
+names(Exam)
+fix(Exam)
+group <-aggregate(Exam[,c("normexam","standLRT")], list(Exam$school), mean)
+#we're calculating the average value of "normexam" and "standLRT"
+#by school (remember "Exam" is the dataset name)
+#What if there is missing data?
+group <-aggregate(Exam[,c("normexam","standLRT")], list(Exam$school), mean, na.rm=T)
+#"na.rm=T" will removing missing values before calculating group mean
+#Merge group level data with individual level data
+#first, need to create a variable "school" in group dataset because
+#right now, "school" is listed as "Group.1"
+group$school <- group$Group.1
+final.data <-merge(Exam, group, by="school")
+
+#examine group slopes before adding random effect#
+#This example from bh1996 dataset#
+library(lattice)
+data(bh1996)
+xyplot(WBEING~HRS|as.factor(GRP),data=bh1996[1:1582,],
+type=c("p","g","r"),col="dark blue",col.line="black",
+xlab="Average number of hours worked",
+ylab="Well-Being")
+
+#listserv
+r-sig-mixed-models
+
+###########################
+#Propensity score matching#
+###########################
+
+#Documentation at: http://cran.r-project.org/web/packages/MatchIt/MatchIt.pdf
+library(MatchIt)
+data(lalonde)
+names(lalonde)
+table(lalonde$re78)
+m.out <- matchit(treat ~ re74 + re75 + educ + black + hispan + age,
+data = lalonde, method = "nearest")
+m.data <- match.data(m.out)
+z.out <- zelig(re78 ~ treat + distance + re74 + re75 + educ + black +
+hispan + age, data = m.data, model = "ls")
+x.out0 <- setx(z.out, fn = NULL, treat = 0)
+x.out1 <- setx(z.out, fn = NULL, treat = 1)
+s.out <- sim(z.out, x=x.out0, x1=x.out1)
+summary(s.out)
+
+
+
+
+
+
+
