@@ -1,0 +1,53 @@
+\documentclass{article}
+
+\title{Workshop 1: Fitting Statistical Models}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+This workshop focuses on using model-fitting functions to determine several
+important values in the process of statistical simulation.
+
+\section{Information}
+
+Statistical simulation requires several components from a fitted linear model:
+
+\begin{itemize}
+  \item The parameter \emph{coefficients}, used to predict the outcome variable,
+    (typically extracted via the {\tt coef} method)
+  \item The \emph{variance-covariance} matrix (typically extracted via the 
+    {\tt vcov} method)
+  \item The link and inverse-link functions, used to fit the model
+\end{itemize}
+
+
+\section{Problem}
+
+\begin{enumerate}
+  \item Select a linear regression to implement (options are given below).
+    
+  \item Create the Zelig Object
+    \begin{itemize}
+      \item Create the zelig2 function signature
+      \item Return a list with a model fitting function specified
+    \end{itemize}
+
+\end{enumerate}
+
+\section{Models to Choose From}
+
+Several common linear models are available to implement:
+
+\begin{itemize}
+  \item Logitistic Regression (glm, family = binomial())
+  \item Gamma Regression (glm, family = Gamma())
+  \item Poisson - Useful for event counts
+  \item Two-stage least-squares
+  \item Ordinal Logistic
+\end{itemize}
+
+
+\end{document}
