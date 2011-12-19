@@ -1,0 +1,11 @@
+Package: ZeligDemo
+Version: 0.1
+Date: 2011-12-19
+Title: A Zelig Model
+Author: UNKNOWN AUTHOR
+Maintainer: UNKNOWN AUTHOR <maintainer@software-project.org>
+Depends: Zelig
+Description: A Zelig Model
+License: GPL (>=2)
+URL: http://gking.harvard.edu/zelig
+Packaged: Mon Dec 19 11:54:39 2011
