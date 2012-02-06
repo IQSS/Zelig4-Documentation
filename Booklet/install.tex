@@ -20,11 +20,15 @@
 }
 
 
-
 % Introduction Installation
 \section{Introduction}
 
-Zelig's installation procedure is straightforward, though the package itself is not standalone, and requires the installation of R version 2.13 (or greater). That is, because Zelig is written in the R statistical programming language, it cannot be installed without support for the R programming language. As a result of this, installing Zelig and Zelig-compliant packages can be divided into three tasks:
+Zelig's installation procedure is straightforward, though the package itself is
+not standalone, and requires the installation of R version 2.13 (or greater).
+That is, because Zelig is written in the R statistical programming language, it
+cannot be installed without support from the R programming language. As a
+result of this, installing Zelig and Zelig-compliant packages can be divided
+into three tasks:
 
 \begin{enumerate}
 	\item Download and Install R,
@@ -34,10 +38,11 @@ Zelig's installation procedure is straightforward, though the package itself is 
 
 The following guide is intended to quickly and easily explain each of these steps.
 
+
 % Requirements for Installation: list the two requirements
 %
 %
-\section{Requirements for Installation}
+\section{Requirements for Installing R}
 
 The Zelig software suite has only two requirements: 
 
@@ -71,7 +76,7 @@ This document contains specific documents for installing R on \MacInstallHref, \
 % Easy Installation Instructions: explain how to install Zelig via install.R
 %
 %
-\section{Easy Installation}
+\section{Simple Zelig Installation}
 
 Once R version 2.13 or greater has been installed on the client's machine, setting up Zelig is a breeze. R has built-in facilities for managing the installation of statistical packages. This provides a simple mechanism for installing Zelig, regardless of the operating system that is being used.
 
@@ -82,10 +87,16 @@ To install Zelig, as well as its add-on packages, simply:
   \item {\bf Launch R}. Once R is installed, this program can be found wherever the computer stores applications (e.g. ``Program Files" on a Windows machine)
   \item At the R command-prompt, type:
     \begin{verbatim}
-    source("http://r.iq.harvard.edu/install_zelig.R")
+    source("http://r.iq.harvard.edu/install_live.R")
     \end{verbatim}
-    This launches pre-written install script, which directs R to download all the appropriate statistical packages associated with the Zelig software suite.
+    This launches an interactive install script that behaves much like a  ``setup-wizard'', which directs R to download all the appropriate statistical packages associated with the Zelig software suite. 
+
+    Users will be given a choice of installing every model in the Zelig software suit or selecting several particular packages geared for specific types of analysis. The packages will be displayed in an ordered list, and to choose
+    a particular package to install requires that the user enter the number corresponding to the listed software package.
 \end{enumerate}
+
+
+
 
 
 
@@ -112,28 +123,48 @@ install.packages(
 
 In addition to Zelig's core package, which exclusively contains simple regression models and a Developers' API for producing novel R packages, a myriad of Zelig add-on packages are available. These packages supplement Zelig's features, and add specialized, advanced models to Zelig.
 
-\subsubsection{List of Available Packages}
+\section{List of Available Packages}
+
 These add-on packages include:
 
 \begin{itemize}
 
-	\item {\tt bivariate.zelig}: Bivariate Models for Logit and Probit Regressions
+	\item {\tt ZeligOrdinal}: Ordinal Models for Logit and Probit Regressions
 
-	\item {\tt gam.zelig}: Generalized Additive Models for Logit, Gaussian, Poisson and Probit Regressions
+	\item {\tt ZeligMultivariate}: Bivariate Models for Logit and Probit Regressions
 
-	\item {\tt gee.zelig}: Generalized Estimating Equation Models for Gamma, Logit, Gaussian, Poisson and Probit Regressions
+	\item {\tt ZeligMultinomial}: Multinomial Models Logit and Probit Regressions
 	
-	\item {\tt mixed.zelig}: Mixed Effect Models (Multi-level) for Gamma, Logit, Least-squares, Poisson and Probit Regressions
-	
-	\item {\tt multinomial.zelig}: Multinomial Models Logit and Probit Regressions
-	
-	\item {\tt ordinal.zelig}: Ordinal Models for Logit and Probit Regressions
+	\item {\tt ZeligGAM}: Generalized Additive Models for Logit, Gaussian, Poisson and Probit Regressions
 
-	\item {\tt survey.zelig}: Survey-weighted Models for Gamma, Logit, Normal, Poisson and Probit Regressions
+	\item {\tt ZeligGEE}: Generalized Estimating Equation Models for Gamma, Logit, Gaussian, Poisson and Probit Regressions
+	
+	\item {\tt ZeligMixed}: Mixed Effect Models (Multi-level) for Gamma, Logit, Least-squares, Poisson and Probit Regressions
+	
+	\item {\tt ZeligSurvey}: Survey-weighted Models for Gamma, Logit, Normal, Poisson and Probit Regressions
+
+	\item {\tt ZeligNetwork}: Social Network Regression Models for Gamma, Logit, Normal, Poisson and Probit Regressions
+
+	\item {\tt ZeligBayesian}: Bayesian Regressions for Logit, Multionomial Logot, Normal, Poisson and Probit Models
+
+	\item {\tt ZeligLeastSquares}: Least Squares Regressions for Seeminly Unrelated, Two-Stage, and Three-Stage Methods
+
+	\item {\tt ZeligCommon}: Common Statistical Models
+
+	\item {\tt ZeligMisc}: Miscellaneous and Uncategorized Models
 
 \end{itemize}
 
-\subsubsection{Using {\tt install.packages}}
+
+\subsection{Using {\tt source("http://r.iq.harvard.edu/install\_live.R")}}
+
+
+
+
+
+
+
+\subsection{Using {\tt install.packages}}
 \begin{minipage}{\linewidth}
 To download any of these packages independently, simply type the following from an R command prompt:
 \begin{verbatim}
@@ -144,10 +175,10 @@ install.packages(
                  )
 \end{verbatim}
 
-Where {\tt "MODEL NAME"} is replaced with the title of the Add-on packages in the above itemized list. For example, to download "Generalized Estimating Equation Models...", note that its package name is {\tt gee.zelig}, and type from the R command prompt:
+Where {\tt "MODEL NAME"} is replaced with the title of the Add-on packages in the above itemized list. For example, to download "Generalized Estimating Equation Models...", note that its package name is {\tt ZeligGEE}, and type from the R command prompt:
 \begin{verbatim}
 install.packages(
-                 "gee.zelig",
+                 "ZeligGAM",
                  repos = "http://r.iq.harvard.edu/",
                  type  = "source"
                  )
