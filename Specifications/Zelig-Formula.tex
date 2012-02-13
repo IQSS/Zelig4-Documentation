@@ -15,28 +15,25 @@ end-users and developers a wide-range of syntactically legal formula options.
 The following document defines the specification for models to be submitted to
 Zelig.
 
-\section{}
-\label{}
-
 
 
 \section{Conceptual Requirements}
 \label{Conceptual-Requirements}
 
 \begin{enumerate}
-  \item Formal language for describing statistical models. The language used to
-    articulate the models should be written generally enough to articulate 
-    arbitrary statistical models. In particular, Zelig needs specifications to
-    provide details for implementing models containing variable types:
+  \item The formulae used to articulate models should be written generally
+    enough to describe most conceivable statistical models.
+    In particular, Zelig needs specifications to desribe the following types
+    of dependent variables:
     \begin{itemize}
       \item Continuous,
       \item Ordered and
       \item Multinomial
     \end{itemize}
 
-    As well as providing facilities for articulating multivariate regressions.
+  \item Additionally, the Zelig formula specification needs to be able to
+    express multivariate regressions.
 
-  \item 
 \end{enumerate}
 
 
@@ -52,9 +49,9 @@ The basic structure of a Zelig formula conforms to the following specifications:
     \end{itemize}
   \item The left-hand side of the formula specifies the outcome (dependent) variables.
   \item The formula must be flat. That is, nested formula are considered
-    illegal. For example, the formula {\tt y ~ a ~ b} is considered illegal.
-  \item The left-hand side only supports "+", "*". ":", and "cbind",
-  \item "cbind" can only be used as the first operation on the left-hand side of an equation.
+    illegal. For example, the formula \begin{verbatim}y ~ a ~ b\end{verbatim} is considered illegal.
+  \item The left-hand side only supports the following operators: ``+'', ``*''. ``:'', and ``cbind'',
+  \item ``cbind'' can only be used as the first operation on the left-hand side of an equation.
   \item The right-hand side of the formula specifies the explanatory (independent) variables.
   \item The formula may be a list if it is describing multiple outcome variables.
 \end{enumerate}
