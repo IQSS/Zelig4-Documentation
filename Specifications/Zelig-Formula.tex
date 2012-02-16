@@ -1,5 +1,7 @@
 \documentclass{article}
 
+\usepackage{hyperref}
+
 \title{Zelig Formula Specification}
 \author{Matt Owen}
 
@@ -9,22 +11,81 @@
 
 \section{Introduction}
 
-The range of allowable formula in Zelig is often over-articulate. This allows
-end-users and developers a wide-range of syntactically legal formula options.
+The following is a technical specification for allowable types of ``formula''
+objects that are supported by Zelig.
 
-The following document defines the specification for models to be submitted to
-Zelig.
 
+
+\section{Requirements}
+
+Zelig formulae need to be written generally enough to handle several types of
+models:
+
+\begin{itemize}
+
+  \item A single response term within a single model equation\footnote{asdas}
+
+  \item A single response term with multiple model equations (sets of predictor
+    terms)\footnote{}
+
+  \item Multiple response terms with a single set of predictor terms\footnote{asd}
+
+  \item Multiple response terms with multiple sets\footnote{Don't drink the water}
+
+\end{itemize}
+
+
+
+\section{Existing Conventions}
+
+There are several existing conventions that extend the functionality of standard
+formula objects:
+
+\begin{itemize}
+
+  \item Basic model formula designated using the \verb+~+ operator specifies a single
+    model equation with a single response variable. Example: \verb|y ~ a + b + c|
+
+  \item Model formula designated using the \verb+cbind+ function in conjunction
+    with the \verb+~+ operator specify multiple response terms for a single
+    equation or set of predictor terms. Example: \verb|cbind(x, y) ~ a + b + c|
+
+  \item The ``Formula'', object found at
+    \url{http://cran.r-project.org/web/packages/Formula/}, encapsulates the
+    features of a standard ``formula'' object while extending its  
+
+\end{itemize}
+
+
+
+
+
+
+
+
+
+\section{Current Support}
+
+Currently, Zelig has support for two types of formula:
+
+\begin{itemize}
+  \item {\bf ``formula'' objects}, which 
+  \item {\bf ``list'' objects}, which contain multiple model equations
+\end{itemize}
+
+Additionally, there is support for several tags within an
 
 
 \section{Conceptual Requirements}
 \label{Conceptual-Requirements}
 
 \begin{enumerate}
+
   \item The formulae used to articulate models should be written generally
     enough to describe most conceivable statistical models.
     In particular, Zelig needs specifications to desribe the following types
     of dependent variables:
+
     \begin{itemize}
       \item Continuous,
       \item Ordered and

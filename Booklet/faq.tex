@@ -1,0 +1,113 @@
+\documentclass{article}
+
+\title{Zelig Cookbook}
+\author{Matt Owen}
+
+%
+\usepackage{hyperref}
+\usepackage{xifthen}
+\usepackage{ifthen}
+
+% Newly defined commands
+\newcommand{\code}[2]{
+
+  :::#2;;;
+}
+
+
+
+% Problem/Cause/Solution Commands
+\newcommand{\problem}[1] {
+
+  % Problem: #1
+
+}
+
+
+\begin{document}
+
+\maketitle
+
+\code{dead}
+
+
+
+
+\section{Introduction}
+
+\section{FAQ's}
+\section{Problem-Cause-Solution}
+
+
+
+\subsection{I cannot install a specific Zelig package on my system}
+\label{subsec:install-specific-package}
+
+\subsubsection{Problem}
+
+\problem{A particular package cannot be installed on my system, using the}
+\code{install.packages} function.
+
+\subsubsection{Cause}
+
+\subsubsection{Solution}
+
+
+% % Section
+% \section{How do I install an Zelig package \code{<X>}?}
+% 
+% Several methods exist for installing an individual zelig package.
+% 
+% \begin{enumerate}
+%   \item If your package is officially supported by the Zelig team, you can
+%     selectively install packages from an the install wizard provided by
+%     Harvard. Simply copy-and-paste the following in an active R terminal, and
+%     \code{source("\url{http://r.iq.harvard.edu/install\_live.R}")}
+% \end{enumerate}
+% 
+% 
+% \subsection{Issue}
+% 
+% \begin{itemize}
+%   \item I know the name of the package that I want to install
+%   \item I get an error when I install via \verb+install.packages+ 
+% \end{itemize}
+% 
+% 
+% \subsection{Resolution}
+% 
+% Typically the command:
+% \begin{verbatim}
+% install.packages("<X>", repos="http://r.iq.harvard.edu/", type="source")
+% \end{verbatim}
+% 
+% {\noindent}will correctly install the Zelig package perfectly. However, this
+% can produce an error if:
+% 
+% \begin{itemize}
+%   \item The package \code{<X>} does not exist (or the package name is a typo).
+%   \item The package \code{<X>} depends on a package \emph{not} installed on
+%     the user's system.
+% \end{itemize}
+
+The solution
+
+
+Problem: Using the \code{install.packages} function, I cannot install a specific Zelig package on my system.
+
+
+Causes:
+
+\begin{enumerate}
+  \item The package name contains a type
+  \item The package is not available on the Zelig repository
+  \item One or more dependency of the package is not installed on the user's system
+\end{enumerate}
+
+Solutions:
+
+
+
+
+
+\end{document}
