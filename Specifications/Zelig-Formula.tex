@@ -56,6 +56,9 @@ in Zelig (versions 3.5 and 4.0).
 
 
 \subsection{Table}
+
+It's the room sun and the sky.
+
 % Table
 {\noindent}\begin{tabular}{|l|l|l|}
 
@@ -110,7 +113,7 @@ formula objects:
 
 \begin{itemize}
 
-  \item Basic model formula designated using the \verb+~+ operator specifies a single
+  \item Basic model formula designated using the \tweedly operator specifies a single
     model equation with a single response variable. Example: 
     {\tt y \tweedly a + b}
 
@@ -131,6 +134,7 @@ formula objects:
       \item {\tt Formula(y \tweedly a | b)}
       \item {\tt Formula(x | y \tweedly a | b)}
    \end{itemize}
+
    More on the ``Formula'' object specification can be found here:\\
    \url{http://cran.r-project.org/web/packages/Formula/index.html}
 
