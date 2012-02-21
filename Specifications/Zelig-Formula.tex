@@ -13,37 +13,46 @@
 
 \section{Introduction}
 
-The following is a technical specification for allowable types of model formula
-objects that are, should be, and could be supported by Zelig Core. In
-particular, ...
-
+The following is a technical specification for the types of model formula
+objects that are, should be, and could be officially supported by Zelig Core.
+The primary motivation for this document is have a specification for model
+formulae that Zelig should officially support, and can in the future be easily
+adapted to interact with the DVN.
 
 
 %
 %
 %
-\section{Requirements}
+\section{Requirements for Formulae}
 \label{sec:req}
 
 Zelig formulae need to be written generally enough to handle several types of
-models:
+model formulae:
 
 \begin{itemize}
 
-  \item A single response term specified within a single model equation
+  \item {\bf A single response term specified within a single model equation.}
+    This is the case where users are studying a single response with a single
+    set of predictor terms. This is the most basic model formula.
 
-  \item A single response term specified across multiple model equations
+  \item {\bf A single response term specified across multiple model equations.}
+    This is the case where users are studying a single response across multiple
+    sets of predictor terms.
 
-  \item Multiple response terms specified within a single model equation
+  \item {\bf Multiple response terms specified within a single model equation.}
+    This is the case where users are studying the effects of a single set of
+    predictor terms on multiple response terms.
 
-  \item Multiple response terms specified within multiple model equations
+  \item {\bf Multiple response terms specified within multiple model equations.}
+    This is the extreme case where users are studying multiple predictor terms
+    dependent on different sets of predictor terms. Additionally, this type of
+    specification is the most general.
+
 \end{itemize}
 
-
-% \footnote{\tt y \TILDE a + b + c}
-% \footnote{\tt cbind(x,y) \TILDE a + b + c}
-% \footnote{\tt list(x \TILDE a + b + c, y \TILDE a + b + c}
-
+%
+%
+\pagebreak
 
 %
 %
@@ -51,18 +60,16 @@ models:
 \section{Existing Conventions in Zelig}
 \label{sec:existing-zelig}
 
-The above requirements specified in section \ref{sec:req}, have implementations
+The requirements specified in section \ref{sec:req}, have implementations
 in Zelig (versions 3.5 and 4.0).
 
 
-\subsection{Table}
-
-It's the room sun and the sky.
+\subsection{Table of Conventions}
 
 % Table
 {\noindent}\begin{tabular}{|l|l|l|}
 
-  % Initial border
+  % Top Border
   \hline
 
   % Column Names (Row #1)
@@ -83,22 +90,22 @@ It's the room sun and the sky.
 
 \subsection{Technical Implementation}
 
-The four types of formulae are craeted using three basic ingredients:
+The four types of formulae are created using three basic ingredients:
 
 \begin{itemize}
 
-  \item {\bf ``formula'' objects}, which allows R programs to evaluate the
-    same formula in multiple contexts.
+  \item {\bf ``formula'' objects}, which are the building block of any model
+    formula
 
-  \item {\bf the ``cbind'' function}, which allows users to tersely specify
-    multiple response terms without.
+  \item {\bf the ``cbind'' function}, which - by convention - is used in simple
+    linear models to specify multiple response terms. This, in general, does not
+    work for every statistical model.
 
   \item {\bf ``list'' objects}, which allow users to specify multiple
-    model equations in an intuitive fashion.
+    model equations in an intuitive fashion. This method is primarily used for
+    the bivariate, dichotomous regressions.
 
 \end{itemize}
-
-Additionally, there is support for several tags within an
 
 
 
@@ -108,17 +115,17 @@ Additionally, there is support for several tags within an
 \section{Existing Conventions Outside of Zelig}
 \label{sec:existing-elsewhere}
 
-There are several existing conventions that extend the functionality of standard
-formula objects:
+There are several existing conventions that specify model formula from packages
+outside of Zelig.
 
 \begin{itemize}
 
-  \item Basic model formula designated using the \tweedly operator specifies a single
+  \item Basic model formula, designated using the \tweedly operator, specifya single
     model equation with a single response variable. Example: 
     {\tt y \tweedly a + b}
 
   \item Model formula designated using the \verb+cbind+ function in conjunction
-    with the \verb+~+ operator specify multiple response terms for a single
+    with the \tweedly operator specify multiple response terms for a single
     equation or set of predictor terms. Example: 
     {\tt cbind(x, y) \tweedly a + b + c}
 
@@ -142,15 +149,21 @@ formula objects:
 
 
 
-
-
+%
+%
+%
 \section{Technical Specification for Basic Formula}
 
 The basic structure of a Zelig formula conforms to the following specifications:
 
 \begin{enumerate}
 
-  \item The left-hand side must be written in one of two formats:
+  \item The left-hand side of the formula specifies the response terms.
+
+  \item The right-hand side of the formula specifies the predictor terms.
+
+
+  \item The left-hand side must adhere to one of the following two conventions:
 
     \begin{itemize}
 
@@ -164,24 +177,24 @@ The basic structure of a Zelig formula conforms to the following specifications:
 
     \end{itemize}
 
-  \item The left-hand side of the formula specifies the outcome (dependent) variables.
+  \item ``cbind'' can only be used as the first operation on the left-hand side
+    of an equation. That is, the formula
+    {\tt cbind(x, y) + cbind(a, b) \tweedly 1} is considered illegal.
 
-  \item The formula must be flat. That is, nested formula are considered
-    illegal. For example, the formula \begin{verbatim}y ~ a ~ b\end{verbatim} is considered illegal.
+  \item The left-hand side only supports the following operators and functions:
+    +, *, :, | and cbind.
 
-  \item The left-hand side only supports the following operators: +, *, :, | and cbind
+  \item The formula must only specify a single left-hand-side and a single
+    right-hand-side. That is, nested formula are considered illegal. For
+    example, the formula \begin{verbatim}y ~ a ~ b\end{verbatim} is considered 
+    illegal.
 
-  \item ``cbind'' can only be used as the first operation on the left-hand side of an equation.
-
-  \item The right-hand side of the formula specifies the explanatory (independent) variables.
-
-  \item The formula may be a list if it is describing multiple outcome variables.
+  \item The formula may be a list of model formulae, if it is describing
+    multiple outcome variables. In this situation, each formulae must follow
+    all of the above restrictions. Additionally, each element of the list may
+    only specify a single response term.
 
 \end{enumerate}
-
-
-
-\section{Technical Specification for Basic Formula}
 
 
 
