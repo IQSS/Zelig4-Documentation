@@ -1,5 +1,11 @@
+% @author Matt Owen
+% @date   2/22/2012
+% This document serves as a specification - and talking point - to clarifying
+% and elaborating on the role, function and definition of model formulae in
+% the Zelig software suite (version 4.0+)
 \documentclass{article}
 
+% Packages
 \usepackage{hyperref}
 
 \title{Zelig Formula Specification}
@@ -11,23 +17,40 @@
 
 \maketitle
 
-\section{Introduction}
+
+
+%
+%
+%
+\section{Introduction and Motivation}
+\label{sec:intro}
 
 The following is a technical specification for the types of model formula
 objects that are, should be, and could be officially supported by Zelig Core.
-The primary motivation for this document is have a specification for model
-formulae that Zelig should officially support, and can in the future be easily
-adapted to interact with the DVN.
+
+The primary motivation for this document is to create a non-rigid guidelone the
+types of model formulae that can be used in the Zelig software suite
+\emph{without} the need to write additional support functions. That is, so long
+as model formula follow the specification later defined in this document, there
+should be little need to create or modify any code aside from the model's
+{\tt zelig2}, {\tt param} and {\tt qi} methods.
+
+It should be noted that any issue stemming from use of exotic or unsupported
+formulae can be resolved with use of {\bf hook} functions or overloading the
+{\bf \tt setx} or {\bf \tt sim} method. This is purely a result of the
+unexpected results that originate from constructing design matrices from
+non-standard formulae.
 
 
+
 %
 %
 %
-\section{Requirements for Formulae}
+\section{Categories of Formulae}
 \label{sec:req}
 
-Zelig formulae need to be written generally enough to handle several types of
-model formulae:
+The current implementation of Zelig allows for the direct support of four
+categories of models:
 
 \begin{itemize}
 
@@ -50,9 +73,7 @@ model formulae:
 
 \end{itemize}
 
-%
-%
-\pagebreak
+
 
 %
 %
@@ -60,11 +81,14 @@ model formulae:
 \section{Existing Conventions in Zelig}
 \label{sec:existing-zelig}
 
-The requirements specified in section \ref{sec:req}, have implementations
-in Zelig (versions 3.5 and 4.0).
+The categories specified in section \ref{sec:req}, have implementations in
+Zelig (versions 3.5 and 4.0). It should be noted that the {\tt list}-method
+supported by Zelig (see the ``Multiple Equations'' row of the following table)
+is the only non-standard formula specification.
 
 
 \subsection{Table of Conventions}
+\label{subsec:table-conventions}
 
 % Table
 {\noindent}\begin{tabular}{|l|l|l|}
@@ -88,9 +112,12 @@ in Zelig (versions 3.5 and 4.0).
 
 \end{tabular}
 
-\subsection{Technical Implementation}
 
-The four types of formulae are created using three basic ingredients:
+\subsection{User-end Specification}
+\label{subsec:user-spec-formula}
+
+The four types of formulae in section \ref{subsec:table-conventions} are created
+using three basic ingredients:
 
 \begin{itemize}
 
@@ -108,6 +135,75 @@ The four types of formulae are created using three basic ingredients:
 \end{itemize}
 
 
+\pagebreak
+
+
+%
+%
+%
+\section{Technical Specification for Basic Formula}
+
+The basic structure of a Zelig formula conforms to the following specifications:
+
+\subsection{Left-Hand Side of a Simple Formula}
+\label{subsec:lhs}
+
+\begin{enumerate}
+
+  \item The left-hand side of the formula specifies the response terms.
+
+  \item W
+
+  \item The left-hand side only supports the following operators and functions:
+    +, *, :, | and cbind.
+
+  % \item The \verb|+| operator specifies multiple response terms
+
+  \item Mathematical operators (\verb|+|, \verb|*|, \verb|-|, \verb|/|) are
+    interpretted arithematically. In particular, \verb|*| differs in meaning
+    between the right and left sides of model formula.
+
+  \item \verb|cbind| can only be used as the first operation on the left-hand side
+    of an equation. That is, the formula
+    {\tt cbind(x, y) + cbind(a, b) \tweedly 1} is considered illegal.
+
+\end{enumerate}
+
+
+\subsection{Right-Hand Side of a Simple Formula}
+\label{subsec:rhs}
+
+\begin{enumerate}
+
+  \item The right-hand side of the formula specifies the predictor terms.
+
+\end{enumerate}
+
+\subsection{Restrictions on Simple Formulae}
+\label{subsec:restriction-simple-formula}
+
+\begin{enumerate}
+
+  \item The formula must only specify a single left-hand-side and a single
+    right-hand-side. That is, nested formula are considered illegal. For
+    example, the formula \begin{verbatim}y ~ a ~ b\end{verbatim} is considered 
+    illegal.
+
+\end{enumerate}
+
+
+\subsection{Formulae with Multiple Equations}
+
+\begin{enumerate}
+
+  \item The formula may be a list of model formulae, if it is describing
+    multiple outcome variables. In this situation, each formulae must follow
+    all of the above restrictions. Additionally, each element of the list may
+    only specify a single response term.
+
+\end{enumerate}
+
+
 
 %
 %
@@ -115,6 +211,7 @@ The four types of formulae are created using three basic ingredients:
 \section{Existing Conventions Outside of Zelig}
 \label{sec:existing-elsewhere}
 
+Before continuing onto the Zelig spec
 There are several existing conventions that specify model formula from packages
 outside of Zelig.
 
@@ -146,55 +243,6 @@ outside of Zelig.
    \url{http://cran.r-project.org/web/packages/Formula/index.html}
 
 \end{itemize}
-
-
-
-%
-%
-%
-\section{Technical Specification for Basic Formula}
-
-The basic structure of a Zelig formula conforms to the following specifications:
-
-\begin{enumerate}
-
-  \item The left-hand side of the formula specifies the response terms.
-
-  \item The right-hand side of the formula specifies the predictor terms.
-
-
-  \item The left-hand side must adhere to one of the following two conventions:
-
-    \begin{itemize}
-
-      \item It must evaluate to a singular vector \emph{or}
-
-      \item It must evaluate to a matrix with one column per outcome variable.
-        \footnote{
-          This allows strict support for the {\tt cbind} function within the
-          left-hand-side of a ``formula'' object
-        }
-
-    \end{itemize}
-
-  \item ``cbind'' can only be used as the first operation on the left-hand side
-    of an equation. That is, the formula
-    {\tt cbind(x, y) + cbind(a, b) \tweedly 1} is considered illegal.
-
-  \item The left-hand side only supports the following operators and functions:
-    +, *, :, | and cbind.
-
-  \item The formula must only specify a single left-hand-side and a single
-    right-hand-side. That is, nested formula are considered illegal. For
-    example, the formula \begin{verbatim}y ~ a ~ b\end{verbatim} is considered 
-    illegal.
-
-  \item The formula may be a list of model formulae, if it is describing
-    multiple outcome variables. In this situation, each formulae must follow
-    all of the above restrictions. Additionally, each element of the list may
-    only specify a single response term.
-
-\end{enumerate}
 
 
 
