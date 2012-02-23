@@ -28,16 +28,16 @@
 The following is a technical specification for the types of model formula
 objects that are, should be, and could be officially supported by Zelig Core.
 
-The primary motivation for this document is to create a non-rigid guidelone the
-types of model formulae that can be used in the Zelig software suite
+The primary motivation for this document is to create a non-rigid guideline for
+the types of model formulae that can be used in the Zelig software suite
 \emph{without} the need to write additional support functions. That is, so long
 as model formula follow the specification later defined in this document, there
 should be little need to create or modify any code aside from the model's
 {\tt zelig2}, {\tt param} and {\tt qi} methods.
 
-It should be noted that any issue stemming from use of exotic or unsupported
+It should be noted that any issue stemming from the use of exotic or unsupported
 formulae can be resolved with use of {\bf hook} functions or overloading the
-{\bf \tt setx} or {\bf \tt sim} method. This is purely a result of the
+{\bf \tt setx} or {\bf \tt sim} methods. This is purely a consequence of the
 unexpected results that originate from constructing design matrices from
 non-standard formulae.
 
@@ -54,19 +54,19 @@ categories of models:
 
 \begin{itemize}
 
-  \item {\bf A single response term specified within a single model equation.}
+  \item {\bf A single response term, specified within a single model equation.}
     This is the case where users are studying a single response with a single
     set of predictor terms. This is the most basic model formula.
 
-  \item {\bf A single response term specified across multiple model equations.}
+  \item {\bf A single response term, specified across multiple model equations.}
     This is the case where users are studying a single response across multiple
     sets of predictor terms.
 
-  \item {\bf Multiple response terms specified within a single model equation.}
+  \item {\bf Multiple response terms, specified within a single model equation.}
     This is the case where users are studying the effects of a single set of
     predictor terms on multiple response terms.
 
-  \item {\bf Multiple response terms specified within multiple model equations.}
+  \item {\bf Multiple response terms, specified within multiple model equations.}
     This is the extreme case where users are studying multiple predictor terms
     dependent on different sets of predictor terms. Additionally, this type of
     specification is the most general.
@@ -83,8 +83,9 @@ categories of models:
 
 The categories specified in section \ref{sec:req}, have implementations in
 Zelig (versions 3.5 and 4.0). It should be noted that the {\tt list}-method
-supported by Zelig (see the ``Multiple Equations'' row of the following table)
-is the only non-standard formula specification.
+\footnote{See the ``Multiple Equations'' row in section
+\ref{subsec:table-conventions}} supported by Zelig is the only non-conventional
+formula specification in the Zelig software package at the moment.
 
 
 \subsection{Table of Conventions}
@@ -143,29 +144,36 @@ using three basic ingredients:
 %
 \section{Technical Specification for Basic Formula}
 
-The basic structure of a Zelig formula conforms to the following specifications:
+The following provides a specification for simple model formulae that can be
+used out-the-box with Zelig core and its add-on packages.
+
+It is worth nothing that the vast majority of statistical models in R use the
+\verb|formula| object to specify information about the relationship between
+response terms and their predictor terms. While in some cases, this type of
+model formula is used to specify multiple response terms, for the most part
+it is used to specify model formulae containing a singular response term.
+
 
 \subsection{Left-Hand Side of a Simple Formula}
 \label{subsec:lhs}
+
+
 
 \begin{enumerate}
 
   \item The left-hand side of the formula specifies the response terms.
 
-  \item W
-
   \item The left-hand side only supports the following operators and functions:
     +, *, :, | and cbind.
 
-  % \item The \verb|+| operator specifies multiple response terms
-
   \item Mathematical operators (\verb|+|, \verb|*|, \verb|-|, \verb|/|) are
     interpretted arithematically. In particular, \verb|*| differs in meaning
-    between the right and left sides of model formula.
+    between the right and left sides of model formula.\footnote{}
 
   \item \verb|cbind| can only be used as the first operation on the left-hand side
     of an equation. That is, the formula
-    {\tt cbind(x, y) + cbind(a, b) \tweedly 1} is considered illegal.
+    {\tt cbind(x, y) + cbind(a, b) \tweedly 1} is considered illegal, despite
+    evaluating to a matrix.
 
 \end{enumerate}
 
