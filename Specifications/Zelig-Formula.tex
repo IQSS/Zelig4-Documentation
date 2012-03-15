@@ -158,24 +158,33 @@ term.
 \subsection{Left-Hand Side of a Simple Formula}
 \label{subsec:lhs}
 
-The following is a specification for the left-hand side of model formula.
+The left-hand side of model equations largely follow the common practives
+across all statistical models. However, several Zelig-isms exist to support
+a unified framework for statistical analysis.
 
 
 \begin{enumerate}
 
   \item The left-hand side of the formula specifies the response terms.
 
-  \item The left-hand side only supports the following operators and functions:
-    {\tt +}, {\tt *}, {\tt :}, {\tt |} and {\tt cbind}.
+  \item The left-hand side supports the following operators and functions:
+    {\tt +}, {\tt *}, and {\tt cbind}.
 
-  \item Mathematical operators (\verb|+|, \verb|*|, \verb|-|, \verb|/|) are
-    interpretted arithematically. In particular, \verb|*| differs in meaning
-    between the right and left sides of model formula.\footnote{}
+  \item Additionally, \verb|cbind| can be used as the first operator on the
+    left-hand-side of an equation to specify multiple response variables. For
+    more information on this method see subsection \ref{subsec:multiple}.
 
   \item The formula must only specify a single left-hand-side and a single
     right-hand-side. That is, nested formula are considered illegal. For
     example, the formula \begin{verbatim}y ~ a ~ b\end{verbatim} is considered 
     illegal.
+
+  \item Mathematical operators (\verb|+|, \verb|*|, \verb|-|, \verb|/|) are
+    interpretted arithematically. In particular, \verb|*| differs in meaning
+    between the right and left sides of model formula.\footnote{Note that 
+    {\tt *} does perform multiplication when placed on the right-hand side of
+    the equation; it specifies that an equation is being modeled with
+    interaction terms.}
 
 \end{enumerate}
 
@@ -212,8 +221,7 @@ The following is a specification for the left-hand side of model formula.
   \item \verb|cbind| can only be used as the first operation on the left-hand side
     of an equation. That is, the formula
     {\tt cbind(x, y) + cbind(a, b) \tweedly 1} is considered illegal, despite
-    evaluating to a matrix.
-
+    the additon operation evaluating the left-hand side to a matrix.
 
 \end{enumerate}
 
