@@ -1,0 +1,147 @@
+\documentclass{article}
+
+\usepackage{fancyvrb}
+\usepackage{ZeligDoc}
+\usepackage{url}
+
+\begin{document}
+
+
+\section{Introduction}
+\label{section:boot-intro}
+
+c...
+
+\section{\code{boot} Method Signature}
+
+The signature of the \code{boot} method is straightforward and does not vary
+between differ Zelig models.
+
+\begin{Code}
+param.logit <- function (obj, num, ...) {
+  # ...
+}
+\end{Code}
+
+\section{\code{param} Return Value}
+
+The return value of a \code{param} method is simply a list containing several entries:
+
+\begin{description}
+	\item[simulations] A vector or matrix of random draws taken from
+		the model's distribution function.  For example, a logit model
+		will take random draws from a Multivariate Normal distribution.
+		
+	\item[alpha] A vector specifying parameters to be passed into
+		the distribution function.  Values for this range from scaling
+		factors to statistical means.
+	
+	\item[fam] An optional parameter.  \emph{fam} must be an object
+		of class ``family''.  This allows for the implicit specification
+		of the link and link-inverse function.  It is recommend that the
+		developer set either this, the link, or the linkinv parameter
+		explicitly.  Setting the family object implicitly defines
+		\emph{link} and \emph{linkinv}.
+		
+	\item[link] An optional parameter.  \emph{link} must be a function.
+		Setting the link function explicitly is useful for defining
+		arbitrary statistical models.  \emph{link} is used primarily to
+		numerically approximate its inverse - a necessary step for
+		simulating \emph{quantities of interest}.
+		
+	\item[linkinv] An optional parameter.  \emph{linkinv} must be a
+		function.  Setting the link's inverse explicitly allows for faster
+		computations than a numerical approximation provides.  If the
+		inverse function is known, it is recommended that this function
+		is explicitly defined.
+		
+\end{description}
+
+%\section{Methods of the \code{parameters} Object}
+%\begin{description}
+%	\item[alpha] Extracts the contents of alpha
+%	\item[coef] Extracts the simulated parameters specified in the key \code{simulations}
+%	\item[link] Extracts the link function from the parameter.  This value exists as long as \emph{fam} or \emph{link} are explicitly set
+%	\item[linkinv] Extracts the link-inverse function from the parameters. This value exists as long as \emph{fam}, \emph{link} or \emph{linkinv} are explicitly set.  If \emph{linkinv} is not explicitly set, then a numerical approximation is used based on \emph{fam} or \emph{link}
+%\end{description}
+
+% NOTABLE FEATURES
+\section{Notable Features of the \code{param} Method}
+
+The \code{param} method is typically a brief, highly structured method. This is because simulating parameters of a statistical model is frequently straightforward, and reduced to simply computing maximum likelihood estimates based on information from the fitted, external model.
+
+
+% DETAILS IN CODING
+\section{Details in Coding the \code{param} Method}
+
+The \code{param} method's main purpose is to compute or simulate ancillary parameters from the statistical model.  In practice, this step is typically accomplished by sampling a particular distribution or via \emph{maximum-likelihood estimation}.
+
+While the simple method of returning a vector or matrix from a \emph{param} function is extremely simple, it has no method for setting link or link-inverse functions for use within the actual simulation process.  That is, it does not provide a clear, easy-to-read method for simulating \emph{quantities of interest}.  By returning an indexed list - or a parameters object - the developer can provide clearly labeled and stored link and link-inverse functions, as well as, ancillary parameters.
+
+\section{Example of setting the \code{fam} attribute}
+
+The following are two slightly different \code{param} methods.
+
+\subsection{\code{param.logit.R}}
+
+\begin{verbatim}
+param.logit <- function(z, x, x1=NULL, num=num)
+  list(
+       coef  = mvrnorm(n=num, mu=coef(z), Sigma=vcov(z)),
+       alpha = NULL,
+       fam   = binomial(link="logit")
+       )
+\end{verbatim}
+
+% warum kommst du nicht herueber?
+
+\subsection{Explanation of \code{param.logit.R}}
+
+The above example shows how link and link-inverse functions (for a ``logit'' model) can be set using a ``family'' object.  Family objects exist for most statistical models - logit, probit, normal, Gaussian, et cetera - and come preset with values for link and link-inverses.  This method does not differ immensely from the simple, vector-only method; however, it allows for the use of several API functions - \emph{link}, \emph{linkinv}, \emph{coef}, \emph{alpha} - that improve the readability and simplicity of the model's implementation.
+
+The \emph{param} function and the \emph{parameters} class offer methods for automating and simplifying a large amount of repetitive and cumbersome code that may come with building the arbitrary statistical model.  While both are in principle entirely optional - so long as the \emph{qi} function is well-written - they serve as a means to quickly and elegantly implement Zelig models.
+
+
+\section{Example of setting the \code{link} and \code{linkinv} attributes}
+
+% POISSON EXAMPLE
+\subsection{\code{param.poisson.R}}
+
+\begin{Code}
+param.normal.survey <- function(obj, num=1000, ...) {
+  # [1]
+  df <- obj$result$df.residual
+  sig2 <- summary(obj)$dispersion
+  alpha <- sqrt(df*sig2/rchisq(num, df=df))
+
+  
+  # [2]
+  simulations <- mvrnorm(num, coef(obj), vcov(obj))
+
+  
+  # [3]
+  fam <- gaussian()
+
+  
+  # [4]
+  list(
+       simulations = simulations,
+       alpha = alpha,
+       fam   = fam
+       )
+}
+
+}
+\end{Code}
+
+\subsection{Explanation of \code{param.poisson.R}}
+
+The above example shows how a \emph{parameters} object can be created with by explicitly setting the statistical model's link function.  The \emph{linkinv} parameter is purely optional, since Zelig will create a numerical inverse if it is undefined.  However, the computation of the inverse is typically slower than non-iterative methods.  As a result of this, if the link-inverse is known, it should be set, using the \emph{linkinv} parameter.
+
+The above example can also contain an \emph{alpha} parameter, in order to store important ancillary parameters - mean, standard deviation, gamma-scale, etc. - that would be necessary in the computation of \emph{quantities of interest}.
+
+%\section{Future Improvements}
+
+% In future releases of Zelig, \emph{parameters} will have more API functions to facilitate common operations - sample drawing, matrix-multiplication, et cetera - so that the developer's focus can be exclusively on implementing important components of the model.
+
+\end{document}
