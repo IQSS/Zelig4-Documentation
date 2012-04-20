@@ -24,6 +24,32 @@ Rbuild's intention is satisfy several specific goals:
 * Update software pages on various sites:
  1. gking.harvard.edu/????
  2. projects.iq.harvard.edu/???
-* Notify builder
+* Notify builder/relevent recipients
+
+## Issues with Previous R-Build
+
+Here are some of the issues with the current version of R-build.
+
+1. Build notifications spam. There should be a limit to how many error emails
+   you can get in one day. That is, it's good to notify everyone when something
+   fails/succeeds, but there's a threshold before it just all becomes white
+   noise.
+2. Notifications are completely uninformative. They require the builder to ssh
+   into the rce and tail a log file. This is probably not good design.
+3. Does not use the "vignettes/" folder for storing Rnw/Sweave documents
 
 ## Implementation Details
+
+The script should do the following in this order:
+
+1. Download freshest release from GitHub/cvs using JSON API
+2. Build the source into a package via "R CMD build pkg-name"
+3. Check the resulting tarball via "R CMD check pkg-name_version.tar.gz"
+ * If there's an error, print to the log and notify relevant people
+ * Otherwise, send a success notification
+4. Move tarball to repository
+5. Update "PACKAGES" and "PACKAGES.gz" files via R's "tools:::write_PACKAGES()"
+6. Fin.
+
+Here's a script I wrote that basically does all this already:
+  http://github.com/zeligdev/build_zelig/blob/master/pkg-build
