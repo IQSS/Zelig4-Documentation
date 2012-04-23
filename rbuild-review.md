@@ -30,6 +30,11 @@ This is a short list of issues with R-build
 
 1. Does not use the "vignettes/" folder for storing Rnw/Sweave documents
 2. Requires technical of linux to force rebuilds/read log files
+3. A bit hard to maintain
+4. Some features seemed to have disappeared:
+ * Updating software release page
+ * Updating documentation page
+ * This was noticed in particular with the *CEM* package
 
 ## R-build Implementation Details
 
@@ -50,7 +55,8 @@ Here is an outline for the R-build script:
  * In the current implementation, this is done a bit circuitously
 6. Fin.
 
-Here's a script I wrote that partially implements these ideas.
+Here's a script I wrote that partially implements these ideas. This has no
+support for working with scholars:
   http://github.com/zeligdev/build_zelig/blob/master/pkg-build
 
 ## R-build Future Features
