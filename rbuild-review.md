@@ -31,7 +31,6 @@ This is a short list of issues with R-build
 
 1. Does not use the "vignettes/" folder for storing Rnw/Sweave documents
 2. Requires technical of linux to force rebuilds/read log files
-3. Extremely verbose
 
 ## R-build Implementation Details
 
