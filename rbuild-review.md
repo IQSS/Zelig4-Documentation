@@ -26,6 +26,15 @@ Rbuild's intention is satisfy several specific goals:
  2. projects.iq.harvard.edu/???
 * Notify builder/relevent recipients
 
+## New Features
+
+1. Dry-run option, that allows users to see the results of rbuild operation
+   *without* sending notifications/
+2. None of this "touch /nfs/projects/r/rbuild/lock/...." stuff anymore. That's
+   bad design.
+3. Terser log file, so that we can read what's going on rather than being
+   bombarded with useless info
+
 ## Issues with Previous R-Build
 
 Here are some of the issues with the current version of R-build.
