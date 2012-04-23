@@ -1,10 +1,9 @@
-# R-Build: A Talk
+# R-Build Review
 
-Over the past few years Rbuild has been slowly outdated, and an ever-increasing
-set of improved tools for managing code and R repositories has become available.
 This document intends to:
 
-* Summarize the goals of Rbuild
+* Summarize the goals of R-build
+* Explain current issues in R-build
 * Specify available tools for R
 * Specify available tools for git/cvs
 * Showcase some basic implementations
@@ -14,51 +13,63 @@ This document intends to:
 Rbuild's intention is satisfy several specific goals:
 
 * Check packages for major warnings and errors. Note that CRAN is no longer
-  accepting packages with ERRORS/WARNINGS/NOTES in any category
+  accepting packages with errors, warnings or notes
 * Build documentation for the specified R package
  * PDF
  * HTML
-* Build package tarball
+* Build the R package's tarball (for installation and archiving)
 * Add tarball to r.iq.harvard.edu repository
 * Update repository package listing (for installs via an interactive R session)
-* Update software pages on various sites:
- 1. gking.harvard.edu/????
- 2. projects.iq.harvard.edu/???
-* Notify builder/relevent recipients
+* Update software pages on related sites:
+ 1. http://gking.harvard.edu/
+ 2. http://projects.iq.harvard.edu/
+* Notify builder/relevent recipients of success of failure
 
-## New Features
+## Issues with Current R-Build
 
-1. Dry-run option, that allows users to see the results of rbuild operation
-   *without* sending notifications/
-2. None of this "touch /nfs/projects/r/rbuild/lock/...." stuff anymore. That's
-   bad design.
-3. Terser log file, so that we can read what's going on rather than being
-   bombarded with useless info
+This is a short list of issues with R-build 
 
-## Issues with Previous R-Build
+1. Does not use the "vignettes/" folder for storing Rnw/Sweave documents
+2. Requires technical of linux to force rebuilds/read log files
+3. Extremely verbose
 
-Here are some of the issues with the current version of R-build.
+## R-build Implementation Details
 
-1. Build notifications spam. There should be a limit to how many error emails
-   you can get in one day. That is, it's good to notify everyone when something
-   fails/succeeds, but there's a threshold before it just all becomes white
-   noise.
-2. Notifications are completely uninformative. They require the builder to ssh
-   into the rce and tail a log file. This is probably not good design.
-3. Does not use the "vignettes/" folder for storing Rnw/Sweave documents
+Here is an outline for the R-build script:
 
-## Implementation Details
-
-The script should do the following in this order:
-
-1. Download freshest release from GitHub/cvs using JSON API
-2. Build the source into a package via "R CMD build pkg-name"
+1. Download source code from repository
+ * CVS: Use the same method currently employed. This is good for private
+   repositories
+ * GIT: Has a JSON API, making it really easy to clone repositories from
+   GitHub.com. This is good for public repositories
+2. Build the source into a package via "R CMD build pkg-name". This should be
+   done in a temporary directory
 3. Check the resulting tarball via "R CMD check pkg-name_version.tar.gz"
  * If there's an error, print to the log and notify relevant people
  * Otherwise, send a success notification
 4. Move tarball to repository
 5. Update "PACKAGES" and "PACKAGES.gz" files via R's "tools:::write_PACKAGES()"
+ * In the current implementation, this is done a bit circuitously
 6. Fin.
 
-Here's a script I wrote that basically does all this already:
+Here's a script I wrote that partially implements these ideas.
   http://github.com/zeligdev/build_zelig/blob/master/pkg-build
+
+## R-build Future Features
+
+This is a wish-list of features in R-build.
+
+1. Dry-run option, that allows users to see the results of R-build operation
+   *without* sending notifications or making changes to the server. This is
+   essentially an rbuild preview
+2. Run R-build as a script rather than the current method of:
+   "touch /nfs/projects/r/rbuild/lock/force-<package-name>"
+3. Terser log file? Right now it's a bit verbose, and hard to get relevant
+   information from
+4. Build notifications spam. There should be a limit to how many error emails
+   you can get in one day. That is, it's good to notify everyone when something
+   fails/succeeds, but there's a threshold before it just all becomes white
+   noise.
+5. Notification emails for failures should be a bit more informative. Simply
+   stating at what stage the R-build script failed would be very useful.
+
