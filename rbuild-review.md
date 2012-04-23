@@ -1,6 +1,7 @@
 # R-Build Review
 
-This document intends to:
+This document is intended to serve as a set of talking points on the R-build
+review.
 
 * Summarize the goals of R-build
 * Explain current issues in R-build
