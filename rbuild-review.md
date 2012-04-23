@@ -10,15 +10,14 @@ This document intends to:
 
 ## Goals of Rbuild
 
-Rbuild's intention is satisfy several specific goals:
+R-build's intention is to do the following:
 
-* Check packages for major warnings and errors. Note that CRAN is no longer
-  accepting packages with errors, warnings or notes
+* Check packages for major warnings and errors
 * Build documentation for the specified R package
  * PDF
  * HTML
-* Build the R package's tarball (for installation and archiving)
-* Add tarball to r.iq.harvard.edu repository
+* Build the R package's tarball
+* Add this tarball to http://r.iq.harvard.edu/ repository
 * Update repository package listing (for installs via an interactive R session)
 * Update software pages on related sites:
  1. http://gking.harvard.edu/
@@ -40,7 +39,7 @@ Here is an outline for the R-build script:
  * CVS: Use the same method currently employed. This is good for private
    repositories
  * GIT: Has a JSON API, making it really easy to clone repositories from
-   GitHub.com. This is good for public repositories
+   GitHub. This is good for public repositories
 2. Build the source into a package via "R CMD build pkg-name". This should be
    done in a temporary directory
 3. Check the resulting tarball via "R CMD check pkg-name_version.tar.gz"
@@ -65,10 +64,9 @@ This is a wish-list of features in R-build.
    "touch /nfs/projects/r/rbuild/lock/force-<package-name>"
 3. Terser log file? Right now it's a bit verbose, and hard to get relevant
    information from
-4. Build notifications spam. There should be a limit to how many error emails
-   you can get in one day. That is, it's good to notify everyone when something
-   fails/succeeds, but there's a threshold before it just all becomes white
-   noise.
+4. Reduce build notification spam. There should be a limit to how many error
+   emails you can get in one day. That is, it's good to notify everyone when
+   something fails/succeeds, but there's a threshold before it just all becomes
+   white noise.
 5. Notification emails for failures should be a bit more informative. Simply
    stating at what stage the R-build script failed would be very useful.
-
