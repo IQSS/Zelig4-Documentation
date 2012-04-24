@@ -1,0 +1,142 @@
+\documentclass{article}
+
+\begin{document}
+
+\section{R-Build Review}
+
+This document is intended to serve as a set of talking points on the
+R-build review.
+
+\begin{itemize}
+\item
+  Summarize the goals of R-build
+\item
+  Explain current issues in R-build
+\item
+  Specify available tools for R
+\item
+  Specify available tools for git/cvs
+\item
+  Showcase some basic implementations
+\end{itemize}
+\subsection{Goals of Rbuild}
+
+R-build's intention is to do the following:
+
+\begin{itemize}
+\item
+  Check packages for major warnings and errors
+\item
+  Build documentation for the specified R package
+  \begin{itemize}
+    \item
+      PDF
+    \item
+      HTML
+  \end{itemize}
+\item
+  Build the R package's tarball
+\item
+  Add this tarball to http://r.iq.harvard.edu/ repository
+\item
+  Update repository package listing (for installs via an interactive R
+  session)
+\item
+  Update software pages on related sites:
+  \begin{itemize}
+    \item
+      http://gking.harvard.edu/
+    \item
+      http://projects.iq.harvard.edu/
+  \end{itemize}
+\item
+  Notify builder/relevent recipients of success of failure
+\end{itemize}
+\subsection{Issues with Current R-Build}
+
+This is a short list of issues with R-build
+
+\begin{enumerate}
+\item
+  Does not use the ``vignettes/'' folder for storing Rnw/Sweave
+  documents
+\item
+  Requires technical of linux to force rebuilds/read log files
+\item
+  A bit hard to maintain
+\item
+  Some features seemed to have disappeared:
+\item
+  Updating software release page
+\item
+  Updating documentation page
+\item
+  This was noticed in particular with the \emph{CEM} package
+\end{enumerate}
+\subsection{R-build Implementation Details}
+
+Here is an outline for the R-build script:
+
+\begin{enumerate}
+\item
+  Download source code from repository
+  \begin{itemize}
+    \item
+      CVS: Use the same method currently employed. This is good for private
+      repositories
+    \item
+      GIT: Has a JSON API, making it really easy to clone repositories from
+      GitHub. This is good for public repositories
+  \end{itemize}
+\item
+  Build the source into a package via ``R CMD build pkg-name''. This
+  should be done in a temporary directory
+\item
+  Check the resulting tarball via ``R CMD check
+  pkg-name\_version.tar.gz''
+  \begin{itemize}
+    \item
+      If there's an error, print to the log and notify relevant people
+    \item
+      Otherwise, send a success notification
+  \end{itemize}
+\item
+  Move tarball to repository
+\item
+  Update ``PACKAGES'' and ``PACKAGES.gz'' files via R's
+  ``tools:::write\_PACKAGES()''
+\item
+  In the current implementation, this is done a bit circuitously
+\item
+  Fin.
+\end{enumerate}
+Here's a script I wrote that partially implements these ideas. This has
+no support for working with scholars:
+http://github.com/zeligdev/build\_zelig/blob/master/pkg-build
+
+\subsection{R-build Future Features}
+
+This is a wish-list of features in R-build.
+
+\begin{enumerate}
+\item
+  Dry-run option, that allows users to see the results of R-build
+  operation \emph{without} sending notifications or making changes to
+  the server. This is essentially an rbuild preview
+\item
+  Run R-build as a script rather than the current method of: ``touch
+  /nfs/projects/r/rbuild/lock/force-''
+\item
+  Terser log file? Right now it's a bit verbose, and hard to get
+  relevant information from
+\item
+  Reduce build notification spam. There should be a limit to how many
+  error emails you can get in one day. That is, it's good to notify
+  everyone when something fails/succeeds, but there's a threshold before
+  it just all becomes white noise.
+\item
+  Notification emails for failures should be a bit more informative.
+  Simply stating at what stage the R-build script failed would be very
+  useful.
+\end{enumerate}
+\end{document}
