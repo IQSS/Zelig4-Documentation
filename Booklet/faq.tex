@@ -1,41 +1,58 @@
-\documentclass{article}
-
-\title{Zelig Cookbook}
-\author{Matt Owen}
-
-%
-\usepackage{hyperref}
-\usepackage{xifthen}
-\usepackage{ifthen}
-
-% Newly defined commands
-\newcommand{\code}[2]{
-
-  :::#2;;;
-}
-
-
-
 % Problem/Cause/Solution Commands
 \newcommand{\problem}[1] {
+  {\noindent\bf Problem}: #1
+}
 
-  % Problem: #1
+\newcommand{\solution}[1] {
+  {\noindent\bf Solution}: #1
+}
+
+
+
+
+\section{End-User Frequently Asked Questions}
+
+\problem{
+  I cannot find a model that was previously in Zelig. How do I find
+  and install the appropriate package?
+}
+
+\solution{
+  Find the
 
 }
 
 
-\begin{document}
 
-\maketitle
 
-\code{dead}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 \section{Introduction}
 
-\section{FAQ's}
 \section{Problem-Cause-Solution}
 
 
@@ -66,7 +83,7 @@
 % \end{enumerate}
 % 
 % 
-% \subsection{Issue}
+\subsection{Issue}
 % 
 % \begin{itemize}
 %   \item I know the name of the package that I want to install
@@ -105,9 +122,3 @@ Causes:
 \end{enumerate}
 
 Solutions:
-
-
-
-
-
-\end{document}
