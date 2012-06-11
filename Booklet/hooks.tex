@@ -1,0 +1,47 @@
+\section{Introduction}
+
+The use of function ``hooks\footnote{\url{http://en.wikipedia.org/wiki/Hooking}}''
+in computer programming and software engineering is common. The technique is
+useful when:
+
+\begin{itemize}
+  \item Data needs to be manipulated between function calls
+  \item The developer needs to edit an object in the middle of a sequence of
+    events
+  \item Extending a feature of a model-fitting function
+  \item Correcting quantities of interest that are computer incorrectly
+\end{itemize}
+
+\section{Simple Example}
+
+\begin{verbatim}
+robust.glm.hook <- function (obj, zcall, call, robust = FALSE, ...) {
+
+  # If "robust" is a list, 
+  if (is.list(robust)) {
+
+    # if none of the entries of robust belong to the vector below
+    if (!any(rob$method %in% c("vcovHAC", "kernHAC", "weave")))
+      stop("robust contains elements that are not supported.")
+
+    # Acquire the value of the robust parameter
+    obj$robust <- robust
+  }
+  else if (!is.logical(robust))
+    stop("Invalid input for robust: choose either TRUE or a list of options.")
+
+  # Set as a robust generalized linear model model (in addition to other types)
+  class(obj) <- c("glm.robust", class(obj))
+
+  # Return...
+  obj
+}
+\end{verbatim}
+
+\section{Specification}
+
+
+
+\subsection{Function Signature}
+
+\subsection{Function Return Value}
