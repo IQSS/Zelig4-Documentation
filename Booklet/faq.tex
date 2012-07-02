@@ -1,74 +1,71 @@
-% Problem/Cause/Solution Commands
+%
+%
+%
+
 \newcommand{\problem}[1] {
-  {\noindent\bf Problem}: #1
+  {\noindent\bf Problem}: \\
+  #1
+}
+
+\newcommand{\cause}[1] {
+  {\noindent\bf Cause}: \\
+  #1
 }
 
 \newcommand{\solution}[1] {
-  {\noindent\bf Solution}: #1
+  {\noindent\bf Solution}: \\
+  #1
 }
 
 
+% FAQ
+%
+%
+\section{User Frequently Asked Questions}
+\label{sec:user-faq}
 
+The following section contains questions that commonly come up for end-users.
+This is in contrast to frequently asked questions for developers.
 
-\section{End-User Frequently Asked Questions}
-
-\problem{
-  I cannot find a model that was previously in Zelig. How do I find
+% Question
+\subsection{I cannot find a model that was previously in Zelig. How do I find
   and install the appropriate package?
 }
 
-\solution{
-  Find the
+\label{subsec:install-specific-package}
 
+\problem{
+  A particular package cannot be installed on my system, using the
+  \code{install.packages} function.
+  \\
 }
 
 
+\cause{
+  xoxo
+  \\
+}
+
+\solution{
+  This is a lame solution
+}
 
 
+\subsection{How do I install a particular Zelig package?}
 
+\problem{Using the \code{install.packages} function, I cannot install a specific Zelig package on my system.}
 
+\cause{
+  \begin{enumerate}
+    \item The package name contains a typo
+    \item The package is not available on the Zelig repository
+    \item One or more dependency of the package is not installed on the user's system
+  \end{enumerate}
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\section{Introduction}
-
-\section{Problem-Cause-Solution}
-
-
-
-\subsection{I cannot install a specific Zelig package on my system}
-\label{subsec:install-specific-package}
-
-\subsubsection{Problem}
-
-\problem{A particular package cannot be installed on my system, using the}
-\code{install.packages} function.
-
-\subsubsection{Cause}
-
-\subsubsection{Solution}
-
+\solution{
+  This is a lame solution
+}
 
 % % Section
 % \section{How do I install an Zelig package \code{<X>}?}
@@ -107,18 +104,4 @@
 %     the user's system.
 % \end{itemize}
 
-The solution
 
-
-Problem: Using the \code{install.packages} function, I cannot install a specific Zelig package on my system.
-
-
-Causes:
-
-\begin{enumerate}
-  \item The package name contains a type
-  \item The package is not available on the Zelig repository
-  \item One or more dependency of the package is not installed on the user's system
-\end{enumerate}
-
-Solutions:
