@@ -1,3 +1,4 @@
+\tableofcontents
 \newcommand{\InstallInteractive}[0]{
   \href{http://r.iq.harvard.edu/install_live.R}{http://r.iq.harvard.edu/install_live.R}
 }
@@ -33,17 +34,13 @@
 % Introduction Installation
 \section{Introduction}
 
-Zelig's installation procedure is straightforward, though the package itself is
-not standalone, and requires the installation of R version 2.13 (or greater).
-That is, because Zelig is written in the R statistical programming language, it
-cannot be installed without support from the R programming language. As a
-result of this, installing Zelig and Zelig-compliant packages can be divided
-into three tasks:
+Zelig is a Statistical software suite written in the R programming language.
+As a result, installing any Zelig add-on is a matter of three steps:
 
 \begin{enumerate}
-  \item Download and Install R,
-  \item Install Zelig, and
-  \item Install Optional Zelig Add-ons
+  \item Download and install R (section \ref{sec:install-r}),
+  \item Install Zelig (section \ref{sec:install-zelig}), and
+  \item Install optional Zelig add-ons (section \ref{sec:install-add-ons})
 \end{enumerate}
 
 The following guide is intended to quickly and easily explain each of these steps.
@@ -58,7 +55,7 @@ The Zelig software suite has only two requirements:
 
 \begin{enumerate}
 
-  \item {\bf R version 2.13+}, which can be downloaded at \href{http://www.r-project.org/}{\tt http://r-project.org/}
+  \item {\bf R version 2.15+}, which can be downloaded at \href{http://www.r-project.org/}{\tt http://r-project.org/}
 
   \item A major operating system, either:
 
@@ -80,12 +77,14 @@ recommended:
 
 % Installing R
 \section{Installing R}
+\label{sec:install-r}
 
 Installing R is typically straightforward, regardless of which operating
 system is being used. Several useful documents exist on CRAN
 (The Comprehensive R Archive Network) for explanation and troubleshooting of R
 installation. These documents can be found on any CRAN mirror. Specifically,
-the complete guide to install R can be found at:
+the complete guide to install R can be found in section
+\ref{sec:install-wizard}.
 
 \InstallInstructionsHref
 
@@ -95,27 +94,32 @@ This document contains specific documents for installing R on \MacInstallHref,
 
 
 % Easy Installation Instructions: explain how to install Zelig via install.R
-\section{Simple Zelig Installation}
+\section{Installing Zelig}
+\label{sec:install-zelig}
 
-Once R version 2.13 or greater has been installed on the client's machine,
-setting up Zelig is simple. R has built-in facilities for managing the
-installation of statistical packages. This provides a simple mechanism for
-installing Zelig, regardless of the operating system that is being used.
+Once R version 2.15 or greater has been installed on the client's machine,
+setting up Zelig is simple, and can be completed in one of two ways. The first
+method is via an installation script (section \ref{subsec:install-wizard}) which
+guides the user through the Zelig installation, and subsequently lets the user
+select exactly which add-on packages he or she would like to install. The second
+method is via R's built-in package-installer (section
+\ref{subsec:install-manual}). If, at a later time, the user wishes to install
+additional Zelig add-ons, they can be manually installed separately from the
+core package (see section \ref{sec:install-add-ons}.
 
+\subsection{Install Wizard: Automating a Zelig Installation}
+\label{subsec:install-wizard}
 
-\subsection{Simple Directions for Using the Instal Script}
+Once the R software is installed, the entire installation procedure of Zelig and
+its add-on packages can be handled automatically via an installation script.
 
-To install Zelig, as well as its add-on packages, simply:
+To install Zelig interactively, as well as its add-on packages, simply:
 
-%
-%
 \begin{enumerate}
 
-  \item {\bf Install R version 2.13 or greater}. Download R from the R project's
-    website, which can be found at {\CranMirror}.
-
-  \item {\bf Launch R}. Once R is installed, this program can be found wherever
-    the computer stores applications (e.g. ``Program Files'' on a Windows machine)
+  \item {\bf Launch R}. This program can be found wherever the computer stores
+    its applications (e.g. ``Program Files'' on a Windows machine or
+    ``Applications'' on a MacOS X Computer)
 
   \item {\bf Run the Setup Wizard}. At the R command-prompt, type:
     \begin{verbatim}
@@ -133,7 +137,7 @@ To install Zelig, as well as its add-on packages, simply:
 
 \end{enumerate}
 
-\subsection{Custom Install}
+\subsection{Custom Install: Customizing Installation via the Installation Wizard}
 \label{subsec:custominstall}
 
 The option for a ``Custom Install'' of the Zelig software suite allows for
@@ -156,9 +160,8 @@ always to the left of the package's name in the menu).
 When all the selections have been made, enter ``{\tt 0}'' to begin installing
 the selected packages.
 
-
-
-\subsection{Install Zelig without Additional Packages}
+\subsection{Manual Install: Installing Zelig via {\tt install.packages}}
+\label{subsec:install-manual}
 
 The following installation procedure will install Zelig without any add-on
 packages. That is, Zelig will only download files necessarily for developing
@@ -175,6 +178,9 @@ install.packages(
                  type  = "source"
                  )
 \end{verbatim}
+
+{\noindent}{\bf NOTE: }This method requires that Zelig, and all its dependent
+packages be installed manually.
 
 
 \section{List of Available Packages}
@@ -210,20 +216,17 @@ These add-on packages include:
 \end{itemize}
 
 \section{Installing Add-on packages}
+\label{sec:install-add-ons}
 
-Add-on packages to Zelig can be installed in a variety of ways, if the user
-chose to not install a package (either by performing a ``Custom Installation''
-or manual installation).
-
-%
 \subsection{Using {\tt source("http://r.iq.harvard.edu/install\_live.R")}}
 
 In most situations, it is simpler and easier to re-run the install script,
 rather than use the common {\tt install.packages} function that comes packaged
 with the R software. If you wish to employ this method, simply follow along
-with the instructions found on page \pageref{subsec:custominstall}.
+with the instructions found on page \pageref{subsec:custominstall}. That is, by
+entering:
 
-
+{\indent}\verb|source("http://r.iq.harvard.edu/install.zelig.R")}|
 
 \subsection{Using {\tt install.packages}}
 
