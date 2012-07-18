@@ -1,0 +1,148 @@
+\documentclass{article}
+\title{Notes on Zelig 4 Time}
+\author{Matt Owen}
+\begin{document}
+
+This is a hastily written document used to serve as a timetable, etc. for the fixes proposed in JH's "Notes on Zelig 4" document. Sorry for the informality in the doc.
+
+\section{Plots}
+
+\subsection{Bar Plots}
+
+\begin{enumerate}
+  \item Barplots should use percentages instead of counts for their measure on the Y-axis \begin{itemize}
+      \item Plots of factor data should not display arbitrary measures such as counts
+      \item Fix: Scale counts with against their total count
+      \item Time: Within a day
+    \end{itemize}
+
+  \item Barplots do not acknowledge data missing from a simulation  \begin{itemize}
+      \item Plots of factor data tend to not include potential entries that are missing from a simualtion. Consider the case where possible values are a range from 1 to 3, however
+        the simulation only produces the results {1, 3}. 2 will be absent from the barplot
+      \item Fix: If appropriate labels are included in the ``qi'' function of a model, this isn't a problem. Otherwise, we can perhaps look at the passed data.frame
+      \item Time: Within a day
+    \end{itemize}
+
+  \item Sort integer factor data (particularly that which is categorical) properly \begin{itemize}
+      \item In short, ensure that 1 < 10 < 0100, even if data is character strings
+      \item Fix: Test the data.frame and categorize it by "numeric" "integer" "factor" in advance. This may require us to cast the plotted data as a different data-type than is returned from the simulations
+      \item Time: Needs some research. 1-2 days (guess-timate).
+      \item Note: This is tricky. And requires use to know something about what kind of data the user expects.
+    \end{itemize}
+\end{enumerate}
+
+
+\subsection{Density Plots}
+
+\begin{enumerate}
+  \item Omit superflous information from density plot \begin{itemize}
+      \item Show densities without bandwidth (and count information [???])
+      \item Fix: Use a different type of plot. plot(density(...)) defaults to display bandwidth. There are other options
+      \item Time: Within a day
+    \end{itemize}
+
+  \item First Difference should show density on the same plot \begin{itemize}
+      \item First differences should combine the E(Y|X) and E(Y|X1) plots. This shows the use exactly what's going on.
+      \item Fix: There are plotting tools made for this.
+      \item Time: Within a day
+      \item Note: I really like this change
+    \end{itemize}
+\end{enumerate}
+
+\subsection{General}
+
+\begin{enumerate}
+  \item Liven up color palette \begin{itemize}
+      \item More interesting colors
+      \item Fix: Use different colors... I think a more gentle, modern color palette would work nicely
+      \item Time: Within a day... or years if we can't agree on colors
+    \end{itemize}
+
+  \item Iterate Throught Colors Palette Differently \begin{itemize}
+      \item Change how we iterate through palette?
+      \item Fix: ?
+      \item Time: Within a day
+      \item Note: This is minor and questionable. A warning should be thrown if our palette is fewer than the number of qi's simulated, which was the original intent of the if-statement. Additionally, 
+        replacing code with multiple operations in place is somewhat misleading in and of itself. It's a trend avoiding perl-style one-liners. The k <- k + 1 \%\% LENGTH is common enough that most people
+        can read it without a second thought though. It should be noted though that it is typically used to sweep improperly sized array issues under the rug.
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Plots over a Range}
+
+These are currently omitted from Zelig 4, due to there essentially being no example code to test against.
+
+Fix: Examine how paraments are passed into the setx function. Ensure that the model-frame is constructed correctly, and write the proper type-casting functions for setx objects -> matrices
+Time:5 days with debugging/plotting/etc
+Note: This is a feature that I've been waiting to put back in
+
+\section{Backwards Compatibilty}
+
+Paricularly for the qi-methods. This can be discussed. There have been several places backwards compatible code has been placed (param for example), however maintaining the style of coding
+where you return a list of simualtions and names
+\begin{verbatim}
+list(
+  qi = list(ev1, ev2),
+  qi.name = list("EV #1", "EV #2")
+  )
+\end{verbatim}
+
+vs. focusing on having people use a different style, that is not dependent upon pairing up two arranged lists:
+
+\begin{verbatim}
+list(
+  "Expected Value #1" = ev1,
+  "Expected Value #2" = ev2
+  )
+\end{verbatim}
+
+seemed not worth pursuing at the time.
+
+It should be noted that in the above example the qi object returned can have its values extracted via:
+obj\$ev1
+obj\$ev2
+
+That is, the qi object encode ever qi title into an acronym, then numbers is uniquely. This was to avoid having to fully write out:
+obj["Expected Value \#1"]
+
+Time (to resupport the old method): Hard to tell. 3-5 days is my best guess.
+Fix: Write a function that detects this sort of return-value, and appropriately casts the result. Then create an object that acts as interface for the returned qi object. This would simply add another layer of abstraction to the qi object.
+Note: I don't think this change should go through. In discussions during the developmental phase of Zelig 4, we thought it was better to lean towards simplifying the API instead of
+backwards compatibility.
+
+Either way, it's a worthwhile discussion to have.
+
+\section{Style}
+
+Using dot arguments \begin{itemize}
+  \item the \texttt{eval.in} function uses the dot arguments ..1 and ..2
+  \item Fix: use named arguments
+  \item Issue with the fix: using named arguments can cause masking in the namespace, because attach is used within this function. Imagine if we correspondingly name that parameters
+    expr and envir. Then if "expr" and "envir" are already somewhere in the namespace, they get masked.
+  \item Motivation for ..1 and ..2: Attach has be used in this case, the \texttt{with}, \texttt{eval}, etc. function on their own cannot always evaluate symbolic name appropriately
+\end{itemize}
+
+Heavy dependence on environments \begin{itemize}
+  \item Zelig stores \emph{a lot} of information in environments
+  \item Simple Fix: None, really. This is somewhat of the idea behind Zelig. Alternatively, we can use object-literals, but that mucks up things in a different way.
+  \item Good fix: There is no real necesssity that Zelig has to have a zelig2 function. That is, statistical models can be fit using the model fitting functino directly ({\tt glm}, {\tt lm}, etc.)
+    And simply these models can be passed directly into the setx and sim functions. I'm all for at least supporting this concept.
+  \item Note: I've wanted to implement the good-fix for a while.
+\end{itemize}
+
+Hidden files \begin{itemize}
+  \item Function should be less hidden
+  \item Fix: Do some house cleaning
+  \item Time: <= 2 days
+  \item Note: It'd be good to do. The R folder is getting mucked up a bit. Additionally, there are unused functions in the package... I think.
+\end{itemize}
+
+\section{Zelig Skeleton}
+
+This is good feedback. I can make the appropriate error/documentation changes this week.
+
+\section{Error Message}
+
+The error messages are really brutal. This is a good list, and there are probably considerably more places we can improve error-notification than just those listed in the document. This can be done next week.
+
+\end{document}

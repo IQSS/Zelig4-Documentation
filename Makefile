@@ -12,3 +12,6 @@ commit:
 	git add .
 	git commit -m "Automatic Commit via Makefile"
 	git push -u origin master
+
+clean:
+	rm *.{aux,bbl,blg,log,toc}
