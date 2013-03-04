@@ -1,0 +1,65 @@
+\documentclass[oneside,letterpaper,12pt]{book}
+\usepackage{hyperref}
+% \usepackage{html}
+
+\usepackage{Rd}
+\usepackage{url}
+%\usepackage{Sweave}
+%\usepackage{/usr/lib64/R/share/texmf/Sweave}
+%\usepackage{/usr/share/R/texmf/Sweave}
+\usepackage{bibentry}
+\usepackage{upquote}
+\usepackage{graphicx}
+\usepackage{natbib}
+\usepackage[reqno]{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{verbatim}
+\usepackage{epsf}
+\usepackage{dcolumn}
+\usepackage{multirow}
+\usepackage{fullpage}
+\usepackage{lscape}
+\usepackage[all]{xy}
+\usepackage{csquotes}
+
+% \usepackage[pdftex, bookmarksopen=true,bookmarksnumbered=true,
+%   linkcolor=webred]{hyperref}
+\bibpunct{(}{)}{;}{a}{}{,}
+\newcolumntype{.}{D{.}{.}{-1}}
+\newcolumntype{d}[1]{D{.}{.}{#1}}
+\newcommand{\MatchIt}{{\sc MatchIt}}
+\newcommand{\hlink}{\htmladdnormallink}
+\newcommand{\Sref}[1]{Section~\ref{#1}}
+\newcommand{\fullrvers}{2.5.1}
+\newcommand{\rvers}{2.5}
+\newcommand{\rwvers}{R-2.5.1}
+%\renewcommand{\bibentry}{\citealt}
+
+\setcounter{tocdepth}{2}
+
+\newcommand{\CiteZelig}[0]{
+  
+  To cite Zelig as a whole, please reference these two sources:
+
+  \begin{verse}
+    Kosuke Imai, Gary King, and Olivia Lau. 2007. ``Zelig: Everyone's
+    Statistical Software,'' \url{http://GKing.harvard.edu/zelig}.
+  \end{verse}
+
+  \begin{verse}
+  Imai, Kosuke, Gary King, and Olivia Lau. (2008). ``Toward A Common Framework for Statistical Analysis and Development.'' Journal of Computational and Graphical Statistics, Vol. 17, No. 4 (December), pp. 892-913. 
+  \end{verse}
+
+}
+
+
+% Removed due to use of scholars over old-style websites:
+%
+% \htmladdtonavigation{
+%   \htmladdnormallink{%
+%     \htmladdimg{http://gking.harvard.edu/pics/home.gif}}
+%   {http://gking.harvard.edu/}
+% }
+% \bodytext{ BACKGROUND="http://gking.harvard.edu/pics/temple.jpg"}
