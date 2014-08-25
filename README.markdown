@@ -1,6 +1,6 @@
 # Zelig Documentation
 
-This repository contains latex files to create the following pieces of documentation:
+THIS REPOSITORY IS FOR Zelig version 4. It contains latex files to create the following pieces of documentation:
 
 * Booklet: The Zelig Developers' Manual
 * DVN: Specification for Zelig-DVN API
